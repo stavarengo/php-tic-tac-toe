@@ -1,0 +1,17 @@
+{
+    "name": "stavarengo/php-tic-tac-toe",
+    "description": "Single player Tic Tac Toe game with a bot as the opponent.",
+    "type": "project",
+    "config": {
+        "process-timeout": 5000,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "TicTacToe\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.2"
+    }
+}
