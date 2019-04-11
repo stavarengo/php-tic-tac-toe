@@ -14,7 +14,7 @@ class GameState implements ResponseBodyInterface
      */
     protected $board;
 
-    public function __construct(Board $board)
+    public function __construct(?Board $board)
     {
         $this->board = $board;
     }
@@ -30,7 +30,7 @@ class GameState implements ResponseBodyInterface
     /**
      * @return Board
      */
-    public function getBoard(): Board
+    public function getBoard(): ?Board
     {
         return $this->board;
     }
@@ -38,15 +38,19 @@ class GameState implements ResponseBodyInterface
     public function toJson(): string
     {
         $gameStateAsArray = [
-            'game' => [
+            'game' => null,
+        ];
+
+        if ($this->board) {
+            $gameStateAsArray['game'] = [
                 "winner" => $this->getWinner(),
                 "board" => $this->getBoard()->toArray(),
                 "units" => [
                     "human" => $this->getBoard()->getHumanUnit(),
                     "bot" => $this->getBoard()->getBotUnit(),
                 ],
-            ],
-        ];
+            ];
+        }
 
         return json_encode($gameStateAsArray);
     }
