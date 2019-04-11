@@ -3,7 +3,6 @@
     "description": "Single player Tic Tac Toe game with a bot as the opponent.",
     "type": "project",
     "config": {
-        "process-timeout": 5000,
         "sort-packages": true
     },
     "autoload": {
@@ -11,7 +10,20 @@
             "TicTacToe\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "TicTacToe\\Test\\": "tests/"
+        }
+    },
     "require": {
         "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.1"
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:4000 -t public/",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
 }
