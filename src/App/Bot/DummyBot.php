@@ -1,7 +1,15 @@
 <?php
+declare(strict_types=1);
 
-interface MoveInterface
+
+namespace TicTacToe\App\Bot;
+
+/**
+ * This bot will always play in the first empty position it finds.
+ */
+class DummyBot implements \MoveInterface
 {
+
     /**
      * Makes a move using the actual game board state, against the player.
      *
@@ -22,5 +30,16 @@ interface MoveInterface
      *
      * @return array
      */
-    public function makeMove(array $boardState, string $playerUnit = 'X'): array;
+    public function makeMove(array $boardState, string $playerUnit = 'X'): array
+    {
+        foreach ($boardState as $rowIndex => $row) {
+            foreach ($row as $colIndex => $col) {
+                if (!$col) {
+                    return [$rowIndex, $colIndex, $playerUnit];
+                }
+            }
+        }
+
+        return [-1, -1, $playerUnit];
+    }
 }
