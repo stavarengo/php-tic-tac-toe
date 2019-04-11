@@ -16,7 +16,7 @@ class GetHandler implements RequestHandlerInterface
 {
     public function handleIt(?\stdClass $requestBody, StorageInterface $storage): Response
     {
-        $gameState = $storage->get('gameState', new GameState(null));
+        $gameState = $storage->get(PostHandler::STORAGE_KEY_GAME_STATE, new GameState(null));
         return new Response($gameState, 200);
     }
 }

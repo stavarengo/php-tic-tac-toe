@@ -14,29 +14,34 @@ use TicTacToe\App\Board\Exception\InvalidBoardUnit;
 
 class PostHandler implements RequestHandlerInterface
 {
+    /**
+     * ID used to store the {@link \TicTacToe\Api\ResponseBody\GameState}.
+     */
+    public const STORAGE_KEY_GAME_STATE = 'gameState';
+
     public function handleIt(?\stdClass $requestBody, StorageInterface $storage): Response
     {
         if (!$requestBody) {
-            return new Response(new Error('Missing body content.'), 400);
+            return new Response(new Error('Missing body content.'), 422);
         }
 
         if (!isset($requestBody->humanUnit)) {
-            return new Response(new Error('Missing the "humanUnit" attribute.'), 400);
+            return new Response(new Error('Missing the "humanUnit" attribute.'), 422);
         }
 
         if (!isset($requestBody->botUnit)) {
-            return new Response(new Error('Missing the "botUnit" attribute.'), 400);
+            return new Response(new Error('Missing the "botUnit" attribute.'), 422);
         }
 
         if (!$requestBody->humanUnit) {
-            return new Response(new Error('Please provide a value for the "humanUnit" attribute.'), 400);
+            return new Response(new Error('Please provide a value for the "humanUnit" attribute.'), 422);
         }
 
         if (!$requestBody->botUnit) {
-            return new Response(new Error('Please provide a value for the "botUnit" attribute.'), 400);
+            return new Response(new Error('Please provide a value for the "botUnit" attribute.'), 422);
         }
 
-        if ($storage->has('gameState')) {
+        if ($storage->has(self::STORAGE_KEY_GAME_STATE)) {
             return new Response(
                 new Error('There already another game in progress. To start a new game you must delete the one currently in progress.'),
                 409
@@ -46,10 +51,10 @@ class PostHandler implements RequestHandlerInterface
         try {
             $gameState = new GameState(new Board($requestBody->botUnit, $requestBody->humanUnit));
         } catch (InvalidBoardUnit $e) {
-            return new Response(new Error($e->getMessage()), 400);
+            return new Response(new Error($e->getMessage()), 422);
         }
 
-        $storage->set('gameState', $gameState);
+        $storage->set(self::STORAGE_KEY_GAME_STATE, $gameState);
 
         return new Response($gameState, 201);
     }

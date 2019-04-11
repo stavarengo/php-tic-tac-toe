@@ -17,7 +17,7 @@ class PostHandlerTest extends TestCase
         $requestHandler = new PostHandler();
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();
@@ -36,7 +36,7 @@ class PostHandlerTest extends TestCase
         $requestHandler = new PostHandler();
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();
@@ -55,7 +55,7 @@ class PostHandlerTest extends TestCase
         $requestHandler = new PostHandler();
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();
@@ -74,7 +74,7 @@ class PostHandlerTest extends TestCase
         $requestHandler = new PostHandler();
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();
@@ -93,7 +93,7 @@ class PostHandlerTest extends TestCase
         $requestHandler = new PostHandler();
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();
@@ -159,7 +159,7 @@ class PostHandlerTest extends TestCase
 
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();
@@ -181,7 +181,7 @@ class PostHandlerTest extends TestCase
 
         $response = $requestHandler->handleIt($requestBody, new ArrayStorage());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(422, $response->getStatusCode());
 
         /** @var Error $responseBody */
         $responseBody = $response->getBody();

@@ -6,6 +6,7 @@ namespace TicTacToe\App\Bot;
 
 /**
  * This bot will always play in the first empty position it finds.
+ * The main motivation of this bot, is for using in tests, but it can also be used in production.
  */
 class DummyBot implements \MoveInterface
 {
