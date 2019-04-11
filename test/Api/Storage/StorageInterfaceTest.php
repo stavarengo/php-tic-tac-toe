@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace TicTacToe\Test\Api\RequestHandler;
 
 use PHPUnit\Framework\TestCase;
-use TicTacToe\Api\RequestHandler\StartNewGame;
-use TicTacToe\Api\ResponseBody\Error;
-use TicTacToe\Api\ResponseBody\GameState;
 use TicTacToe\Api\Storage\ArrayStorage;
 use TicTacToe\Api\Storage\PhpSessionStorage;
 use TicTacToe\Api\Storage\StorageInterface;
