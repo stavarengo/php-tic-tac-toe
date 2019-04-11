@@ -21,7 +21,6 @@ class GetHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(GameState::class, $responseBody);
         $this->assertNull($responseBody->getBoard());
-        $this->assertNull($responseBody->getWinner());
     }
 
     public function testRequestWhenThereIsGameStarted()

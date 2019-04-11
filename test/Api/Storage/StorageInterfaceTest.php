@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TicTacToe\Test\Api\RequestHandler;
+namespace TicTacToe\Test\Api\Storage;
 
 use PHPUnit\Framework\TestCase;
 use TicTacToe\Api\Storage\ArrayStorage;

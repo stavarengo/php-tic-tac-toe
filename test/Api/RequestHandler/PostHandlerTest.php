@@ -118,7 +118,6 @@ class PostHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(GameState::class, $responseBody);
 
-        $this->assertNull($responseBody->getWinner());
         $this->assertEquals($requestBody->humanUnit, $responseBody->getBoard()->getHumanUnit());
         $this->assertEquals($requestBody->botUnit, $responseBody->getBoard()->getBotUnit());
     }

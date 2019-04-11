@@ -20,14 +20,6 @@ class GameState implements ResponseBodyInterface
     }
 
     /**
-     * @return string|null
-     */
-    public function getWinner(): ?string
-    {
-        return null;
-    }
-
-    /**
      * @return Board
      */
     public function getBoard(): ?Board
@@ -43,7 +35,7 @@ class GameState implements ResponseBodyInterface
 
         if ($this->board) {
             $gameStateAsArray['game'] = [
-                "winner" => $this->getWinner(),
+                "winner" => null,
                 "board" => $this->getBoard()->toArray(),
                 "units" => [
                     "human" => $this->getBoard()->getHumanUnit(),
