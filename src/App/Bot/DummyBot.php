@@ -4,12 +4,26 @@ declare(strict_types=1);
 
 namespace TicTacToe\App\Bot;
 
+use TicTacToe\App\FinalResultChecker;
+
 /**
  * This bot will always play in the first empty position it finds.
  * The main motivation of this bot, is for using in tests, but it can also be used in production.
  */
 class DummyBot implements \MoveInterface
 {
+    /**
+     * @var FinalResultChecker
+     */
+    protected $finalResultChecker;
+
+    /**
+     * DummyBot constructor.
+     */
+    public function __construct()
+    {
+        $this->finalResultChecker = new FinalResultChecker();
+    }
 
     /**
      * Makes a move using the actual game board state, against the player.
@@ -36,6 +50,10 @@ class DummyBot implements \MoveInterface
         $botUnit = 'X';
         if ($playerUnit == 'X') {
             $botUnit = 'O';
+        }
+
+        if ($this->finalResultChecker->getFinalResultFromBoardArray($boardState)) {
+            return [-1, -1, $botUnit];
         }
 
         foreach ($boardState as $rowIndex => $row) {
