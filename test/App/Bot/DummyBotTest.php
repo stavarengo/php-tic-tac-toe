@@ -12,11 +12,21 @@ class DummyBotTest extends TestCase
 {
     public function testDummyBotMustAlwaysChooseTheFirstSpotAvailable()
     {
+        // Prepare the board in a way that is going to be draw
         $board = new Board();
+        $board->set(0,0, $board->getHumanUnit());
+        $board->set(1,1, $board->getHumanUnit());
+        $board->set(0,2, $board->getHumanUnit());
+
         $bot = new DummyBot();
 
         foreach ($board->toArray() as $rowIndex => $row) {
             foreach ($row as $colIndex => $col) {
+                if ($col) {
+                    // This column is already fulfilled
+                    continue;
+                }
+
                 $nextMove = $bot->makeMove($board->toArray(), $board->getHumanUnit());
 
                 $this->assertJsonStringEqualsJsonString(

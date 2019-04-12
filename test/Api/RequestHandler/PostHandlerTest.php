@@ -8,6 +8,7 @@ use TicTacToe\Api\RequestHandler\PostHandler;
 use TicTacToe\Api\ResponseBody\Error;
 use TicTacToe\Api\ResponseBody\GameState;
 use TicTacToe\Api\Storage\ArrayStorage;
+use TicTacToe\App\Board\Board;
 
 class PostHandlerTest extends TestCase
 {
@@ -187,7 +188,10 @@ class PostHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(Error::class, $responseBody);
 
-        $this->assertEquals('Please use one of the following units: "X", "O".', $responseBody->getDetail());
+        $this->assertEquals(
+            sprintf('Please use one of the following units: "%s".', implode('", "', Board::VALID_UNITS)),
+            $responseBody->getDetail()
+        );
     }
 
 }

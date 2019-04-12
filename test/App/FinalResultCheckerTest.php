@@ -37,8 +37,8 @@ class FinalResultCheckerTest extends TestCase
 
     public function testGettingTheWinnerInAllPossibleCombinations()
     {
-        $unit1 = 'O';
-        $unit2 = 'X';
+        $unit1 = Board::VALID_UNITS[0];
+        $unit2 = Board::VALID_UNITS[1];
         $finalResultChecker = new FinalResultChecker();
         $allCombinations = [
             // Rows victory

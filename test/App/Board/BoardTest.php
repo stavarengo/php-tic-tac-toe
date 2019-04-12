@@ -13,14 +13,15 @@ use TicTacToe\App\Board\Exception\InvalidBoardUnit;
 
 class BoardTest extends TestCase
 {
-    public function testThePlayerUnitsMustBeOnlyOneOfTheLetters_X_or_O()
+
+    public function testThePlayerUnitsMustBeOneOfTheAllowedOnes()
     {
-        $validUnit1 = 'X';
-        $validUnit2 = 'O';
+        $validUnit1 = Board::VALID_UNITS[0];
+        $validUnit2 = Board::VALID_UNITS[1];
         $validUnit1ByteCode = ord($validUnit1);
         $validUnit2ByteCode = ord($validUnit2);
 
-        // First make sure that we can use the letters 'X' and 'O'
+        // First make sure that we can use the letters Board::VALID_UNITS[1] and Board::VALID_UNITS[0]
         new Board($validUnit1, $validUnit2);
         new Board($validUnit2, $validUnit1);
 
@@ -47,7 +48,8 @@ class BoardTest extends TestCase
         // Now try to use invalid letters.
         $invalidUnitByteCode = 0;
         do {
-            if (!in_array($invalidUnitByteCode, [$validUnit1ByteCode, $validUnit2ByteCode])) {
+            $invalidUnit = chr($invalidUnitByteCode);
+            if (!Board::isValidUnit($invalidUnit)) {
                 $failIfBoardAcceptsThisPairOfUnits($invalidUnitByteCode, $validUnit1ByteCode);
                 $failIfBoardAcceptsThisPairOfUnits($validUnit1ByteCode, $invalidUnitByteCode);
 
@@ -62,10 +64,10 @@ class BoardTest extends TestCase
     public function testBoardMustThrowExceptionWhenUnitsAreEquals()
     {
         // First make sure it does not throw exceptions when the units are different.
-        new Board('X', 'O');
+        new Board(Board::VALID_UNITS[1], Board::VALID_UNITS[0]);
 
         try {
-            new Board('X', 'X');
+            new Board(Board::VALID_UNITS[1], Board::VALID_UNITS[1]);
             $this->fail('The board accepted that both players choose the same unit.');
         } catch (InvalidBoardUnit $e) {
             $this->assertRegExp('/The units must be different\..+/', $e->getMessage());
@@ -75,8 +77,8 @@ class BoardTest extends TestCase
 
     public function testSetMustThrowInvalidUnitException()
     {
-        $unit1 = 'X';
-        $unit2 = 'O';
+        $unit1 = Board::VALID_UNITS[1];
+        $unit2 = Board::VALID_UNITS[0];
         $board = new Board($unit1, $unit2);
 
         // First make sure it does not throw exceptions when using valid units.
@@ -100,8 +102,8 @@ class BoardTest extends TestCase
 
     public function testSetMustThrowExceptionWhenRowIndexIsInvalid()
     {
-        $unit1 = 'O';
-        $board = new Board($unit1, 'X');
+        $unit1 = Board::VALID_UNITS[0];
+        $board = new Board($unit1, Board::VALID_UNITS[1]);
 
         // First make sure it does not throw exceptions when using valid values.
         $board->set(0, 0, $unit1);
@@ -128,8 +130,8 @@ class BoardTest extends TestCase
 
     public function testSetMustThrowExceptionWhenColumnIndexIsInvalid()
     {
-        $unit1 = 'O';
-        $board = new Board($unit1, 'X');
+        $unit1 = Board::VALID_UNITS[0];
+        $board = new Board($unit1, Board::VALID_UNITS[1]);
 
         // First make sure it does not throw exceptions when using valid values.
         $board->set(0, 0, $unit1);
@@ -156,8 +158,8 @@ class BoardTest extends TestCase
 
     public function testBoardMustThrowExceptionWhenTryToSetTheSameCoordinateTwice()
     {
-        $unit1 = 'O';
-        $board = new Board($unit1, 'X');
+        $unit1 = Board::VALID_UNITS[0];
+        $board = new Board($unit1, Board::VALID_UNITS[1]);
 
         // First make sure it does not throw exceptions when set values to empty coordinates.
         for ($row = 0; $row < 3; $row++) {
@@ -206,7 +208,7 @@ class BoardTest extends TestCase
 
     public function testBoardMustStoreTheCorrectUnitReceivedInTheParameter()
     {
-        $units = ['X', 'O'];
+        $units = [Board::VALID_UNITS[1], Board::VALID_UNITS[0]];
         $board = new Board($units[0], $units[1]);
 
         // First make sure it does not throw exceptions when set values to empty coordinates.
@@ -219,5 +221,52 @@ class BoardTest extends TestCase
                 $this->assertEquals($unit, $board->get($row, $column));
             }
         }
+    }
+
+    public function testMethodIsValidBoard()
+    {
+        $this->assertTrue(Board::isValidBoard((new Board())->toArray()));
+        $this->assertTrue(Board::isValidBoard([['', '', ''], ['', '', ''], ['', '', '']]));
+
+        $invalidBoards = [
+            [],
+            [1, 3, 4],
+            [[], [], []],
+            [[1, 2, 3], [], []],
+            [['', ''], ['', '', ''], ['', '']],
+            [['', '', ''], ['', '', ''], ['', '']],
+        ];
+
+        foreach ($invalidBoards as $invalidBoard) {
+            // Make sure the board is really invalid.
+            $this->assertFalse(
+                Board::isValidBoard($invalidBoard),
+                sprintf(
+                    'This board should not be considered valid: "%s".',
+                    json_encode($invalidBoard)
+                )
+            );
+        }
+
+    }
+
+    public function testMethodIsValidUnit()
+    {
+        // Now try to use invalid letters.
+        $invalidUnitByteCode = 0;
+        do {
+            $unit = chr($invalidUnitByteCode);
+            $this->assertEquals(
+                in_array($unit, Board::VALID_UNITS),
+                Board::isValidUnit($unit),
+                sprintf(
+                    'The character "%s" (byte code "%s") should not be considered valid.',
+                    $unit,
+                    $invalidUnitByteCode
+                )
+            );
+
+            $invalidUnitByteCode++;
+        } while ($invalidUnitByteCode < 256);
     }
 }

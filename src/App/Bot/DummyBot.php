@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TicTacToe\App\Bot;
 
+use TicTacToe\App\Board\Board;
 use TicTacToe\App\FinalResultChecker;
 
 /**
@@ -47,13 +48,21 @@ class DummyBot implements \MoveInterface
      */
     public function makeMove(array $boardState, string $playerUnit = 'X'): array
     {
-        $botUnit = 'X';
-        if ($playerUnit == 'X') {
-            $botUnit = 'O';
+        if (!Board::isValidUnit($playerUnit)) {
+            return [-1, -1, null];
+        }
+
+        $botUnit = Board::VALID_UNITS[0];
+        if ($playerUnit == $botUnit) {
+            $botUnit = Board::VALID_UNITS[1];
+        }
+
+        if (!Board::isValidBoard($boardState)) {
+            return [-1, -1, null];
         }
 
         if ($this->finalResultChecker->getFinalResultFromBoardArray($boardState)) {
-            return [-1, -1, $botUnit];
+            return [-1, -1, null];
         }
 
         foreach ($boardState as $rowIndex => $row) {
