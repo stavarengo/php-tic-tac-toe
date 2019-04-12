@@ -40,7 +40,7 @@ class Board implements BoardInterface
      * @param string $humanUnit
      * @throws InvalidBoardUnit
      */
-    public function __construct(string $botUnit = 'X', string $humanUnit = 'O')
+    public function __construct(string $botUnit = 'O', string $humanUnit = 'X')
     {
         $validUnits = ['X', 'O'];
         if (!in_array($botUnit, $validUnits) || !in_array($humanUnit, $validUnits)) {

@@ -100,8 +100,8 @@ class BoardTest extends TestCase
 
     public function testSetMustThrowExceptionWhenRowIndexIsInvalid()
     {
-        $unit1 = 'X';
-        $board = new Board($unit1);
+        $unit1 = 'O';
+        $board = new Board($unit1, 'X');
 
         // First make sure it does not throw exceptions when using valid values.
         $board->set(0, 0, $unit1);
@@ -128,8 +128,8 @@ class BoardTest extends TestCase
 
     public function testSetMustThrowExceptionWhenColumnIndexIsInvalid()
     {
-        $unit1 = 'X';
-        $board = new Board($unit1);
+        $unit1 = 'O';
+        $board = new Board($unit1, 'X');
 
         // First make sure it does not throw exceptions when using valid values.
         $board->set(0, 0, $unit1);
@@ -156,8 +156,8 @@ class BoardTest extends TestCase
 
     public function testBoardMustThrowExceptionWhenTryToSetTheSameCoordinateTwice()
     {
-        $unit1 = 'X';
-        $board = new Board($unit1);
+        $unit1 = 'O';
+        $board = new Board($unit1, 'X');
 
         // First make sure it does not throw exceptions when set values to empty coordinates.
         for ($row = 0; $row < 3; $row++) {

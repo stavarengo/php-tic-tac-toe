@@ -33,14 +33,19 @@ class DummyBot implements \MoveInterface
      */
     public function makeMove(array $boardState, string $playerUnit = 'X'): array
     {
+        $botUnit = 'X';
+        if ($playerUnit == 'X') {
+            $botUnit = 'O';
+        }
+
         foreach ($boardState as $rowIndex => $row) {
             foreach ($row as $colIndex => $col) {
                 if (!$col) {
-                    return [$rowIndex, $colIndex, $playerUnit];
+                    return [$rowIndex, $colIndex, $botUnit];
                 }
             }
         }
 
-        return [-1, -1, $playerUnit];
+        return [-1, -1, $botUnit];
     }
 }
