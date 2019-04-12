@@ -12,6 +12,8 @@ use TicTacToe\App\Board\Exception\InvalidBoardUnit;
 
 class Board implements BoardInterface
 {
+    public const VALID_UNITS = ['O', 'X'];
+
     /**
      * @var array[]
      */
@@ -40,12 +42,11 @@ class Board implements BoardInterface
      * @param string $humanUnit
      * @throws InvalidBoardUnit
      */
-    public function __construct(string $botUnit = 'O', string $humanUnit = 'X')
+    public function __construct(string $botUnit = self::VALID_UNITS[0], string $humanUnit = self::VALID_UNITS[1])
     {
-        $validUnits = ['X', 'O'];
-        if (!in_array($botUnit, $validUnits) || !in_array($humanUnit, $validUnits)) {
+        if (!self::isValidUnit($botUnit) || !self::isValidUnit($humanUnit)) {
             throw new InvalidBoardUnit(
-                sprintf('Please use one of the following units: "%s".', implode('", "', $validUnits))
+                sprintf('Please use one of the following units: "%s".', implode('", "', self::VALID_UNITS))
             );
         }
 
@@ -57,6 +58,52 @@ class Board implements BoardInterface
 
         $this->botUnit = $botUnit;
         $this->humanUnit = $humanUnit;
+    }
+
+    /**
+     * Checks whether the array is a valid board or not.
+     * To be valid, the $board must be a 2D array of the 3x3 board, where the keys are always 0, 1 and 2.
+     * This is an example of a valid board:
+     *      [
+     *          ['', '', ''],
+     *          ['', '', ''],
+     *          ['', '', ''],
+     *      ]
+     *
+     * @param array $board
+     * @return bool
+     */
+    public static function isValidBoard(array $board): bool
+    {
+        $isValid = isset($board[0][0]) && isset($board[0][1]) && isset($board[0][2])
+            && isset($board[1][0]) && isset($board[1][1]) && isset($board[1][2])
+            && isset($board[2][0]) && isset($board[2][1]) && isset($board[2][2]);
+
+        return $isValid;
+    }
+
+    /**
+     * Check whether the $unit can be used as a player unit or not.
+     * @param string $unit
+     * @return bool
+     * @see \TicTacToe\App\Board\Board::VALID_UNITS
+     */
+    public static function isValidUnit(string $unit): bool
+    {
+        return in_array($unit, self::VALID_UNITS);
+    }
+
+    public function __toString()
+    {
+        return implode(
+            "\n",
+            array_map(
+                function ($row) {
+                    return ($row[0] ?: '_') . ' ' . ($row[1] ?: '_') . ' ' . ($row[2] ?: '_');
+                },
+                $this->toArray()
+            )
+        );
     }
 
     /**

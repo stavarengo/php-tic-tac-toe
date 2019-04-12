@@ -13,11 +13,7 @@ class FinalResultChecker
 
     public function getFinalResultFromBoardArray(array $board): ?string
     {
-        // Check if the board is in the valid format
-        if (!isset($board[0][0]) || !isset($board[0][1]) || !isset($board[0][2])
-            || !isset($board[1][0]) || !isset($board[1][1]) || !isset($board[1][2])
-            || !isset($board[2][0]) || !isset($board[2][1]) || !isset($board[2][2])
-        ) {
+        if (!Board::isValidBoard($board)) {
             return null;
         }
 
