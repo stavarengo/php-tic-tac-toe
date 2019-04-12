@@ -7,6 +7,7 @@ namespace TicTacToe\Test\App\Bot;
 use PHPUnit\Framework\TestCase;
 use TicTacToe\App\Board\Board;
 use TicTacToe\App\Bot\DummyBot;
+use TicTacToe\App\Bot\RandomBot;
 
 class MoveInterfaceTest extends TestCase
 {
@@ -19,6 +20,7 @@ class MoveInterfaceTest extends TestCase
     {
         $this->allBotsImplementation = [
             new DummyBot(),
+            new RandomBot(),
         ];
     }
 
