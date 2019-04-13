@@ -1,0 +1,74 @@
+<?php
+/** @var \TicTacToe\WebUi\View $this */
+?>
+
+<h1>500 - Bad Server</h1>
+<p><a href="#" onclick="document.location.reload(); return false;">Click here to try again.</a></p>
+
+<?php
+if (!($exception = $this->get('exception'))) {
+    return;
+}
+
+if (!($exception instanceof \Throwable)) {
+    return;
+}
+?>
+
+<hr/>
+
+<h2>Additional information:</h2>
+<h3><?php echo get_class($exception) ?></h3>
+<dl>
+    <dt>File:</dt>
+    <dd>
+        <pre><?php echo $exception->getFile() ?>:<?php echo $exception->getLine() ?></pre>
+    </dd>
+    <dt>Message:</dt>
+    <dd>
+        <pre><?php echo htmlspecialchars($exception->getMessage()) ?></pre>
+    </dd>
+    <dt>Stack trace:</dt>
+    <dd>
+        <pre><?php echo htmlspecialchars($exception->getTraceAsString()) ?></pre>
+    </dd>
+</dl>
+
+<?php
+if (!$exception->getPrevious()) {
+    return;
+}
+?>
+
+<hr/>
+
+<h2>Previous exceptions:</h2>
+<ul class="list-unstyled">
+    <?php $exceptionCount = 0 ?>
+    <?php while ($previousException = $exception->getPrevious()) : ?>
+        <li>
+            <h3><?php echo get_class($previousException) ?></h3>
+            <dl>
+                <dt>File:</dt>
+                <dd>
+                    <pre><?php echo $previousException->getFile() ?>:<?php echo $previousException->getLine() ?></pre>
+                </dd>
+                <dt>Message:</dt>
+                <dd>
+                    <pre><?php echo htmlspecialchars($previousException->getMessage()) ?></pre>
+                </dd>
+                <dt>Stack trace:</dt>
+                <dd>
+                    <pre><?php echo htmlspecialchars($previousException->getTraceAsString()) ?></pre>
+                </dd>
+            </dl>
+        </li>
+        <?php
+        $exception = $previousException;
+        if (++$exceptionCount >= 50) {
+            echo '<li>There is more exceptions, but we print only the first 50 exceptions.</li>';
+            break;
+        }
+        ?>
+    <?php endwhile ?>
+</ul>

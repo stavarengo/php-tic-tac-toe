@@ -1,0 +1,29 @@
+<?php
+/** @var \TicTacToe\WebUi\View $this */
+
+if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false
+    || preg_match('/PHP.+Development Server/', $_SERVER['SERVER_SOFTWARE'])
+) {
+    return;
+}
+?>
+
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Unsupported Server!</h4>
+    <p>
+        PHP Tic Tac Toe was only tested with <a href="https://httpd.apache.org/" target="_blank">Apache</a> and
+        <a href="https://www.php.net/manual/en/features.commandline.webserver.php" target="_blank">PHP's Built-in web
+            server</a>.
+        <br>
+        You are using <code><?php echo $_SERVER['SERVER_SOFTWARE'] ?></code>.
+    </p>
+    <hr>
+    <p class="mb-0">
+        The easiest way to fix this is to use the PHP's Built-in web server. <br>
+        Open your terminal and run the following code:
+    </p>
+    <pre>php -S 0.0.0.0:4000 -t '<?php echo getcwd() ?>/public/'</pre>
+    <p class="mb-0">
+        In case you choose not to fix this problem, you are in your own, and I wish you good luck.
+    </p>
+</div>

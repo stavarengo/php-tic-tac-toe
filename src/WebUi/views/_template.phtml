@@ -1,0 +1,24 @@
+<?php
+/** @var \TicTacToe\WebUi\View $this */
+?>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="<?php echo $this->basePath('assets/app.css') ?>"/>
+    <link rel="stylesheet" href="<?php echo $this->basePath('assets/bootstrap.min.4.3.1.css') ?>"/>
+
+    <title>PHP Tic Tac Toe</title>
+</head>
+<body>
+    <?php include __DIR__ . '/_template-check-web-server.phtml'; ?>
+
+    <?php echo $this->get('content') ?>
+
+    <script src="<?php echo $this->basePath('assets/app.js') ?>" async></script>
+</body>
+</html>
