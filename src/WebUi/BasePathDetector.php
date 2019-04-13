@@ -69,6 +69,6 @@ class BasePathDetector
         $basePath = preg_replace('~^(.*?)/index.php$~', '$1', $basePath);
         $basePath = trim($basePath, DIRECTORY_SEPARATOR);
 
-        return $basePath;
+        return '/' . $basePath;
     }
 }

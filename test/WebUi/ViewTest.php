@@ -23,12 +23,13 @@ class ViewTest extends TestCase
      */
     private $viewFile;
 
-    public function testGetBasePathMethod()
+    public function testBasePathMethod()
     {
-        $basePath = 'the-base-path-for-test';
-        $view = new View($basePath, $this->testViewsDir);
+        $this->assertEquals('/', (new View('/', $this->testViewsDir))->basePath());
+        $this->assertEquals('/app.css', (new View('/', $this->testViewsDir))->basePath('app.css'));
 
-        $this->assertEquals($basePath, $view->getBasePath());
+        $this->assertEquals('/public', (new View('/public', $this->testViewsDir))->basePath());
+        $this->assertEquals('/public/app.css', (new View('/public', $this->testViewsDir))->basePath('app.css'));
     }
 
     public function testGetViewVariables()

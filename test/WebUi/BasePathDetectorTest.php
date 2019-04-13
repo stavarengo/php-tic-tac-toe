@@ -92,11 +92,11 @@ class BasePathDetectorTest extends TestCase
         $publicDirectoryPath = '/var/www/html/public';
         $possibilities = [
             // DOCUMENT_ROOT       => Base path to the public folder
-            '/var/www/html/public' => '',
-            '/var/www/html' => 'public',
-            '/var/www' => 'html/public',
-            '/var' => 'www/html/public',
-            '/' => 'var/www/html/public',
+            '/var/www/html/public' => '/',
+            '/var/www/html' => '/public',
+            '/var/www' => '/html/public',
+            '/var' => '/www/html/public',
+            '/' => '/var/www/html/public',
         ];
 
         $basePathDetector = new BasePathDetector();
@@ -107,11 +107,28 @@ class BasePathDetectorTest extends TestCase
                 sprintf('Failed when document root was "%s".', $documentRoot)
             );
 
-            $documentRootWithSlashInTheEnd = "$documentRoot/";
+            $documentRootWithSlashAtTheEnd = "$documentRoot/";
             $this->assertEquals(
                 $expectedBasePath,
-                $basePathDetector->detect($documentRootWithSlashInTheEnd, $publicDirectoryPath),
+                $basePathDetector->detect($documentRootWithSlashAtTheEnd, $publicDirectoryPath),
                 sprintf('Failed when this document root "%s" had a slash in the end.', $documentRoot)
+            );
+
+            $publicDirectoryWithSlashAtThePath = "$publicDirectoryPath/";
+            $this->assertEquals(
+                $expectedBasePath,
+                $basePathDetector->detect($documentRoot, $publicDirectoryWithSlashAtThePath),
+                sprintf('Failed when the public directory "%s" had a slash in the end.', $publicDirectoryPath)
+            );
+
+            $this->assertEquals(
+                $expectedBasePath,
+                $basePathDetector->detect($documentRootWithSlashAtTheEnd, $publicDirectoryWithSlashAtThePath),
+                sprintf(
+                    'Failed when both public directory ("%s") and document root ("%s") had a slash in the end.',
+                    $publicDirectoryPath,
+                    $documentRoot
+                )
             );
         }
     }
@@ -121,16 +138,16 @@ class BasePathDetectorTest extends TestCase
     {
         $basePathDetector = new BasePathDetector();
 
-        $this->assertEquals('public', $basePathDetector->detect('/var/www/html/', '/var/www/html/public/'));
+        $this->assertEquals('/public', $basePathDetector->detect('/var/www/html/', '/var/www/html/public/'));
     }
 
     public function testTheIndexDotPhpFileMustBeStripOutTheBasePath()
     {
         $basePathDetector = new BasePathDetector();
 
-        $this->assertEquals('public', $basePathDetector->detect('/var/www/html', '/var/www/html/public/index.php'));
+        $this->assertEquals('/public', $basePathDetector->detect('/var/www/html', '/var/www/html/public/index.php'));
         $this->assertEquals(
-            'public/another-file.php',
+            '/public/another-file.php',
             $basePathDetector->detect('/var/www/html', '/var/www/html/public/another-file.php')
         );
     }

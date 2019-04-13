@@ -52,11 +52,12 @@ class View
     }
 
     /**
+     * @param string|null $path
      * @return string
      */
-    public function getBasePath(): string
+    public function basePath(?string $path = null): string
     {
-        return $this->basePath;
+        return ($this->basePath == '/' ?  '' : $this->basePath . '/') . $path;
     }
 
     /**
