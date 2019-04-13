@@ -30,8 +30,8 @@ class PostHandlerTest extends TestCase
     public function testRequestMissingTheHumanUnitAttribute()
     {
         $requestBody = (object)[
-            'humanUnit-invalid-key' => 'X',
-            'botUnit' => 'O',
+            'humanUnit-invalid-key' => Board::VALID_UNITS[0],
+            'botUnit' => Board::VALID_UNITS[1],
         ];
 
         $requestHandler = new PostHandler();
@@ -49,8 +49,8 @@ class PostHandlerTest extends TestCase
     public function testRequestMissingTheBotUnitAttribute()
     {
         $requestBody = (object)[
-            'humanUnit' => 'X',
-            'botUnit-invalid-key' => 'O',
+            'humanUnit' => Board::VALID_UNITS[0],
+            'botUnit-invalid-key' => Board::VALID_UNITS[1],
         ];
 
         $requestHandler = new PostHandler();
@@ -69,7 +69,7 @@ class PostHandlerTest extends TestCase
     {
         $requestBody = (object)[
             'humanUnit' => '',
-            'botUnit' => 'O',
+            'botUnit' => Board::VALID_UNITS[0],
         ];
 
         $requestHandler = new PostHandler();
@@ -87,7 +87,7 @@ class PostHandlerTest extends TestCase
     public function testRequestWithTheBotUnitAttributeEmpty()
     {
         $requestBody = (object)[
-            'humanUnit' => 'X',
+            'humanUnit' => Board::VALID_UNITS[0],
             'botUnit' => '',
         ];
 
@@ -106,8 +106,8 @@ class PostHandlerTest extends TestCase
     public function testStartNewGameSuccessfully()
     {
         $requestBody = (object)[
-            'humanUnit' => 'X',
-            'botUnit' => 'O',
+            'humanUnit' => Board::VALID_UNITS[0],
+            'botUnit' => Board::VALID_UNITS[1],
         ];
 
         $requestHandler = new PostHandler();
@@ -126,8 +126,8 @@ class PostHandlerTest extends TestCase
     public function testTryToStartNewGameWhenThereIsAnotherGameStaredAlready()
     {
         $requestBody = (object)[
-            'humanUnit' => 'X',
-            'botUnit' => 'O',
+            'humanUnit' => Board::VALID_UNITS[0],
+            'botUnit' => Board::VALID_UNITS[1],
         ];
         $storage = new ArrayStorage();
         $requestHandler = new PostHandler();
@@ -153,8 +153,8 @@ class PostHandlerTest extends TestCase
     public function testTryToStartNewGameWithBothUnitsEquals()
     {
         $requestBody = (object)[
-            'humanUnit' => 'X',
-            'botUnit' => 'X',
+            'humanUnit' => Board::VALID_UNITS[0],
+            'botUnit' => Board::VALID_UNITS[0],
         ];
         $requestHandler = new PostHandler();
 
@@ -167,16 +167,35 @@ class PostHandlerTest extends TestCase
         $this->assertInstanceOf(Error::class, $responseBody);
 
         $this->assertEquals(
-            'The units must be different. You set both to "X".',
+            sprintf('The units must be different. You set both to "%s".', Board::VALID_UNITS[0]),
             $responseBody->getDetail()
         );
     }
 
-    public function testTryToStartNewGameWithInvalidUnitsEquals()
+    public function testTryToStartNewGameWithInvalidUnits()
     {
+        $invalidUnit1 = null;
+        $invalidUnit2 = null;
+
+        foreach (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'] as $possibleInvalidUnit) {
+            if (!Board::isValidUnit($possibleInvalidUnit)) {
+                if (!$invalidUnit1) {
+                    $invalidUnit1 = $possibleInvalidUnit;
+                } else if (!$invalidUnit2) {
+                    $invalidUnit2 = $possibleInvalidUnit;
+                }
+                if ($invalidUnit1 && $invalidUnit2 && $invalidUnit1 != $invalidUnit1) {
+                    break;
+                }
+            }
+        }
+        $this->assertNotNull($invalidUnit1, 'Could not figure out an invalid unit to use in this test.');
+        $this->assertNotNull($invalidUnit2, 'Could not figure out an invalid unit to use in this test.');
+        $this->assertNotEquals($invalidUnit1, $invalidUnit2, 'I need two different invalid units to use in this test.');
+
         $requestBody = (object)[
-            'humanUnit' => 'a',
-            'botUnit' => 'b',
+            'humanUnit' => $invalidUnit1,
+            'botUnit' => $invalidUnit2,
         ];
         $requestHandler = new PostHandler();
 

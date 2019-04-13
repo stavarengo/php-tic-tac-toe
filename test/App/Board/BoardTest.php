@@ -85,7 +85,15 @@ class BoardTest extends TestCase
         $board->set(0, 0, $unit1);
         $board->set(0, 1, $unit2);
 
-        $invalidUnit = 'z';
+        $invalidUnit = null;
+        foreach (['z', 'x', 'w', 'y', 'k'] as $possibleInvalidUnit) {
+            if (!Board::isValidUnit($possibleInvalidUnit)) {
+                $invalidUnit = $possibleInvalidUnit;
+                break;
+            }
+        }
+        $this->assertNotNull($invalidUnit, 'Could not figure out an invalid unit to use in this test.');
+
         $this->assertFalse(
             in_array($invalidUnit, [$unit1, $unit2]),
             sprintf(

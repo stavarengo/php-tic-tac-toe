@@ -52,7 +52,7 @@ class PutHandlerTest extends TestCase
     {
         // First start a game
         $storage = new ArrayStorage();
-        $response = (new PostHandler())->handleIt((object)['humanUnit' => 'X', 'botUnit' => 'O'], $storage);
+        $response = (new PostHandler())->handleIt((object)['humanUnit' => Board::VALID_UNITS[0], 'botUnit' => Board::VALID_UNITS[1]], $storage);
         $this->assertEquals(201, $response->getStatusCode());
 
         $invalidValue = -1;
@@ -77,7 +77,7 @@ class PutHandlerTest extends TestCase
     {
         // First start a game
         $storage = new ArrayStorage();
-        $response = (new PostHandler())->handleIt((object)['humanUnit' => 'X', 'botUnit' => 'O'], $storage);
+        $response = (new PostHandler())->handleIt((object)['humanUnit' => Board::VALID_UNITS[0], 'botUnit' => Board::VALID_UNITS[1]], $storage);
         $this->assertEquals(201, $response->getStatusCode());
 
         $row = 1;
@@ -93,7 +93,7 @@ class PutHandlerTest extends TestCase
     {
         // First start a game
         $storage = new ArrayStorage();
-        $response = (new PostHandler())->handleIt((object)['humanUnit' => 'X', 'botUnit' => 'O'], $storage);
+        $response = (new PostHandler())->handleIt((object)['humanUnit' => Board::VALID_UNITS[0], 'botUnit' => Board::VALID_UNITS[1]], $storage);
         $this->assertEquals(201, $response->getStatusCode());
 
         $row = 1;
@@ -148,12 +148,10 @@ class PutHandlerTest extends TestCase
 
     public function testBotMustMakeItsMoveAfterReceivingTheHumanMove()
     {
-        $humanUnit = 'X';
-        $botUnit = 'O';
         $storage = new ArrayStorage();
 
         // First start a game
-        $response = (new PostHandler())->handleIt((object)['humanUnit' => $humanUnit, 'botUnit' => $botUnit], $storage);
+        $response = (new PostHandler())->handleIt((object)['humanUnit' => Board::VALID_UNITS[0], 'botUnit' => Board::VALID_UNITS[1]], $storage);
         $this->assertEquals(201, $response->getStatusCode());
         /** @var GameState $gameState */
         $gameState = $response->getBody();
@@ -228,9 +226,7 @@ class PutHandlerTest extends TestCase
 
     public function testBotChooseToMakeAnInvalidMove()
     {
-        $botUnit = 'X';
-        $humanUnit = 'O';
-        $board = new Board($botUnit, $humanUnit);
+        $board = new Board();
         $storage = new ArrayStorage([
             PostHandler::STORAGE_KEY_GAME_STATE => new GameState($board),
         ]);
@@ -238,7 +234,7 @@ class PutHandlerTest extends TestCase
         /** @var \MoveInterface $stubBot */
         $stubBot = $this->createMock(DummyBot::class);
         $stubBot->method('makeMove')
-            ->willReturn([-1, -1, $botUnit]);
+            ->willReturn([-1, -1, $board->getBotUnit()]);
 
         // Set the move
         $requestBody = (object)['row' => 0, 'column' => 0];

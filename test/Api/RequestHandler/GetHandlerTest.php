@@ -8,6 +8,7 @@ use TicTacToe\Api\RequestHandler\GetHandler;
 use TicTacToe\Api\RequestHandler\PostHandler;
 use TicTacToe\Api\ResponseBody\GameState;
 use TicTacToe\Api\Storage\ArrayStorage;
+use TicTacToe\App\Board\Board;
 
 class GetHandlerTest extends TestCase
 {
@@ -30,8 +31,8 @@ class GetHandlerTest extends TestCase
         // First start a game
         $response = (new PostHandler())->handleIt(
             (object)[
-                'humanUnit' => 'X',
-                'botUnit' => 'O',
+                'humanUnit' => Board::VALID_UNITS[0],
+                'botUnit' => Board::VALID_UNITS[1],
             ],
             $storage
         );
