@@ -86,7 +86,10 @@ class PutHandlerTest extends TestCase
         // Set the move
         $response = (new PutHandler(new DummyBot()))->handleIt((object)['row' => $row, 'column' => $column], $storage);
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertSame($storage->get(PostHandler::STORAGE_KEY_GAME_STATE), $response->getBody());
+        /** @var GameState $responseBody */
+        $responseBody = $response->getBody();
+        $this->assertInstanceOf(GameState::class, $responseBody);
+        $this->assertSame($storage->get(PostHandler::STORAGE_KEY_GAME_BOARD), $responseBody->getBoard());
     }
 
     public function testTryingToMoveToAPlaceAlreadyInUse()
@@ -131,7 +134,7 @@ class PutHandlerTest extends TestCase
     {
         // First start a game
         $storage = new ArrayStorage();
-        $storage->set(PostHandler::STORAGE_KEY_GAME_STATE, new GameState(null));
+        $storage->set(PostHandler::STORAGE_KEY_GAME_BOARD, null);
 
         // Set the move
         $requestBody = (object)['row' => 1, 'column' => 1];
@@ -178,7 +181,7 @@ class PutHandlerTest extends TestCase
     {
         $board = new Board();
         $storage = new ArrayStorage([
-            PostHandler::STORAGE_KEY_GAME_STATE => new GameState($board),
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
         ]);
 
         $board->set(0, 0, $board->getHumanUnit());
@@ -203,7 +206,7 @@ class PutHandlerTest extends TestCase
     {
         $board = new Board();
         $storage = new ArrayStorage([
-            PostHandler::STORAGE_KEY_GAME_STATE => new GameState($board),
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
         ]);
 
         $board->set(0, 0, $board->getBotUnit());
@@ -228,7 +231,7 @@ class PutHandlerTest extends TestCase
     {
         $board = new Board();
         $storage = new ArrayStorage([
-            PostHandler::STORAGE_KEY_GAME_STATE => new GameState($board),
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
         ]);
 
         /** @var \MoveInterface $stubBot */
@@ -262,7 +265,7 @@ class PutHandlerTest extends TestCase
         $board->set(2, 0, $board->getBotUnit());
 
         $storage = new ArrayStorage([
-            PostHandler::STORAGE_KEY_GAME_STATE => new GameState($board),
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
         ]);
 
         $this->assertTrue((new FinalResultChecker())->isDraw($board));
@@ -289,7 +292,7 @@ class PutHandlerTest extends TestCase
         $board->set(1, 2, $board->getBotUnit());
 
         $storage = new ArrayStorage([
-            PostHandler::STORAGE_KEY_GAME_STATE => new GameState($board),
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
         ]);
 
         $this->assertEquals($board->getHumanUnit(), (new FinalResultChecker())->getFinalResult($board));

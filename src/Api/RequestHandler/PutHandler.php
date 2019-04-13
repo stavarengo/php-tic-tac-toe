@@ -48,23 +48,23 @@ class PutHandler implements RequestHandlerInterface
             return new Response(new Error('Please provide a value for the "column" attribute.'), 422);
         }
 
-        /** @var GameState $gameState */
-        $gameState = $storage->get(PostHandler::STORAGE_KEY_GAME_STATE);
+        /** @var Board $board */
+        $board = $storage->get(PostHandler::STORAGE_KEY_GAME_BOARD);
 
-        if (!$gameState || !$gameState->getBoard()) {
+        if (!$board) {
             return new Response(new Error('There is no game in progress.'), 409);
         }
 
-        if ($this->finalResultChecker->getFinalResult($gameState->getBoard())) {
+        if ($this->finalResultChecker->getFinalResult($board)) {
             return new Response(new Error('There is already done.'), 409);
         }
 
         try {
             /** @noinspection PhpUnhandledExceptionInspection */
-            $gameState->getBoard()->set(
+            $board->set(
                 $requestBody->row,
                 $requestBody->column,
-                $gameState->getBoard()->getHumanUnit()
+                $board->getHumanUnit()
             );
         } catch (CoordinateAlreadyInUse $e) {
             return new Response(new Error($e->getMessage()), 400);
@@ -74,10 +74,10 @@ class PutHandler implements RequestHandlerInterface
             return new Response(new Error($e->getMessage()), 400);
         }
 
-        if (!$this->finalResultChecker->getFinalResult($gameState->getBoard())) {
-            $botMove = $this->bot->makeMove($gameState->getBoard()->toArray(), $gameState->getBoard()->getHumanUnit());
+        if (!$this->finalResultChecker->getFinalResult($board)) {
+            $botMove = $this->bot->makeMove($board->toArray(), $board->getHumanUnit());
             try {
-                $gameState->getBoard()->set($botMove[0], $botMove[1], $gameState->getBoard()->getBotUnit());
+                $board->set($botMove[0], $botMove[1], $board->getBotUnit());
             } catch (CoordinateAlreadyInUse $e) {
                 return new Response(new Error('The bot choose an invalid move. ' . $e->getMessage()), 400);
             } catch (InvalidBoardColumn $e) {
@@ -89,19 +89,6 @@ class PutHandler implements RequestHandlerInterface
             }
         }
 
-        return new Response($gameState, 200);
-    }
-
-    private function isThereAnyMoveLeft(Board $board): bool
-    {
-        foreach ($board->toArray() as $rowIndex => $row) {
-            foreach ($row as $colIndex => $col) {
-                if (!$col) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return new Response(new GameState($board), 200);
     }
 }

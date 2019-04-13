@@ -46,6 +46,6 @@ class GetHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(GameState::class, $responseBody);
         $this->assertNotNull($responseBody->getBoard());
-        $this->assertSame($storage->get(PostHandler::STORAGE_KEY_GAME_STATE), $response->getBody());
+        $this->assertSame($storage->get(PostHandler::STORAGE_KEY_GAME_BOARD), $responseBody->getBoard());
     }
 }

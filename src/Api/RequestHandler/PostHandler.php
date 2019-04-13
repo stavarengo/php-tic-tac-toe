@@ -17,7 +17,7 @@ class PostHandler implements RequestHandlerInterface
     /**
      * ID used to store the {@link \TicTacToe\Api\ResponseBody\GameState}.
      */
-    public const STORAGE_KEY_GAME_STATE = 'gameState';
+    public const STORAGE_KEY_GAME_BOARD = 'game-board';
 
     public function handleIt(?\stdClass $requestBody, StorageInterface $storage): Response
     {
@@ -41,7 +41,7 @@ class PostHandler implements RequestHandlerInterface
             return new Response(new Error('Please provide a value for the "botUnit" attribute.'), 422);
         }
 
-        if ($storage->has(self::STORAGE_KEY_GAME_STATE)) {
+        if ($storage->has(self::STORAGE_KEY_GAME_BOARD)) {
             return new Response(
                 new Error('There already another game in progress. To start a new game you must delete the one currently in progress.'),
                 409
@@ -54,7 +54,7 @@ class PostHandler implements RequestHandlerInterface
             return new Response(new Error($e->getMessage()), 422);
         }
 
-        $storage->set(self::STORAGE_KEY_GAME_STATE, $gameState);
+        $storage->set(self::STORAGE_KEY_GAME_BOARD, $gameState->getBoard());
 
         return new Response($gameState, 201);
     }

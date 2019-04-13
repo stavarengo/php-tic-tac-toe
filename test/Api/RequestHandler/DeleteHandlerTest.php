@@ -18,27 +18,27 @@ class DeleteHandlerTest extends TestCase
         $storage = new ArrayStorage();
         $response = (new DeleteHandler())->handleIt(null, $storage);
 
-        $this->assertFalse($storage->has(PostHandler::STORAGE_KEY_GAME_STATE));
+        $this->assertFalse($storage->has(PostHandler::STORAGE_KEY_GAME_BOARD));
 
         $this->assertEquals(204, $response->getStatusCode());
         $this->assertNull($response->getBody());
 
-        $this->assertFalse($storage->has(PostHandler::STORAGE_KEY_GAME_STATE));
+        $this->assertFalse($storage->has(PostHandler::STORAGE_KEY_GAME_BOARD));
     }
 
     public function testDeleteGameSuccessfully()
     {
         $storage = new ArrayStorage([
-            PostHandler::STORAGE_KEY_GAME_STATE => new GameState(new Board()),
+            PostHandler::STORAGE_KEY_GAME_BOARD => new Board(),
         ]);
 
-        $this->assertTrue($storage->has(PostHandler::STORAGE_KEY_GAME_STATE));
+        $this->assertTrue($storage->has(PostHandler::STORAGE_KEY_GAME_BOARD));
 
         $response = (new DeleteHandler())->handleIt(null, $storage);
 
         $this->assertEquals(204, $response->getStatusCode());
         $this->assertNull($response->getBody());
 
-        $this->assertFalse($storage->has(PostHandler::STORAGE_KEY_GAME_STATE));
+        $this->assertFalse($storage->has(PostHandler::STORAGE_KEY_GAME_BOARD));
     }
 }
