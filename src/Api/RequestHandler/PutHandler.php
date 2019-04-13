@@ -14,7 +14,8 @@ use TicTacToe\App\Board\Exception\CoordinateAlreadyInUse;
 use TicTacToe\App\Board\Exception\InvalidBoardColumn;
 use TicTacToe\App\Board\Exception\InvalidBoardRow;
 use TicTacToe\App\Board\Exception\InvalidBoardUnit;
-use TicTacToe\App\Bot\DummyBot;
+use TicTacToe\App\Bot\MinimaxBot;
+use TicTacToe\App\FinalResultChecker;
 
 class PutHandler implements RequestHandlerInterface
 {
@@ -22,10 +23,15 @@ class PutHandler implements RequestHandlerInterface
      * @var \MoveInterface
      */
     protected $bot;
+    /**
+     * @var FinalResultChecker
+     */
+    private $finalResultChecker;
 
     public function __construct(?\MoveInterface $bot = null)
     {
-        $this->bot = $bot ?? new DummyBot();
+        $this->bot = $bot ?? new MinimaxBot();
+        $this->finalResultChecker = new FinalResultChecker();
     }
 
     public function handleIt(?\stdClass $requestBody, StorageInterface $storage): Response
@@ -49,6 +55,10 @@ class PutHandler implements RequestHandlerInterface
             return new Response(new Error('There is no game in progress.'), 409);
         }
 
+        if ($this->finalResultChecker->getFinalResult($gameState->getBoard())) {
+            return new Response(new Error('There is already done.'), 409);
+        }
+
         try {
             /** @noinspection PhpUnhandledExceptionInspection */
             $gameState->getBoard()->set(
@@ -64,7 +74,7 @@ class PutHandler implements RequestHandlerInterface
             return new Response(new Error($e->getMessage()), 400);
         }
 
-        if ($this->isThereAnyMoveLeft($gameState->getBoard())) {
+        if (!$this->finalResultChecker->getFinalResult($gameState->getBoard())) {
             $botMove = $this->bot->makeMove($gameState->getBoard()->toArray(), $gameState->getBoard()->getHumanUnit());
             try {
                 $gameState->getBoard()->set($botMove[0], $botMove[1], $gameState->getBoard()->getBotUnit());
