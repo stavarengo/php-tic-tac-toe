@@ -104,9 +104,9 @@ class Dispatcher implements DispatcherInterface
 
         $viewVariables = [];
 
-        $board = $storage->get(PostHandler::STORAGE_KEY_GAME_BOARD);
+        $storage->delete(PostHandler::STORAGE_KEY_GAME_BOARD);
         $templateVariables = [
-            'gameState' => $board ? new \TicTacToe\Api\ResponseBody\GameState($board) : null,
+            'gameState' => null,
         ];
 
         $content = self::getView($this->basePath)->render('index.phtml', $viewVariables, '_template.phtml', $templateVariables);
