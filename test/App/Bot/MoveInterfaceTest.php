@@ -9,6 +9,7 @@ use TicTacToe\App\Board\Board;
 use TicTacToe\App\Bot\DummyBot;
 use TicTacToe\App\Bot\MinimaxBot;
 use TicTacToe\App\Bot\RandomBot;
+use TicTacToe\App\FinalResultChecker;
 
 class MoveInterfaceTest extends TestCase
 {
@@ -17,13 +18,60 @@ class MoveInterfaceTest extends TestCase
      */
     protected $allBotsImplementation;
 
-    protected function setUp(): void
+    public function testAllPossibleMovies()
     {
-        $this->allBotsImplementation = [
-            new DummyBot(),
-            new RandomBot(),
-            new MinimaxBot(),
-        ];
+
+        $recursiveFunction = function ($whoPlays, $humanUnit, $botUnit, array $board, \MoveInterface $bot)
+        use (&$recursiveFunction) {
+            $whoPlaysNext = $whoPlays == $humanUnit ? $botUnit : $humanUnit;
+
+            if ((new FinalResultChecker())->getFinalResultFromBoardArray($board)) {
+                return;
+            }
+
+            if ($whoPlays == $humanUnit) {
+                for ($row = 0; $row < 3; $row++) {
+                    for ($col = 0; $col < 3; $col++) {
+                        if ($board[$row][$col]) {
+                            continue;
+                        }
+                        $board[$row][$col] = $humanUnit;
+
+                        $recursiveFunction($whoPlaysNext, $humanUnit, $botUnit, $board, $bot);
+
+                        $board[$row][$col] = '';
+                    }
+                }
+            } else {
+                try {
+                    $move = $bot->makeMove($board, $humanUnit);
+                    $board[$move[0]][$move[1]] = $move[2];
+                } catch (\Throwable $e) {
+                    $this->fail(
+                        sprintf(
+                            'The bot "%s" failed with exception "%s" when deciding the its next move in the board "%s". The exception message is: "%s".',
+                            get_class($bot),
+                            get_class($e),
+                            json_encode($board),
+                            $e->getMessage()
+                        )
+                    );
+                }
+
+                $recursiveFunction($whoPlaysNext, $humanUnit, $botUnit, $board, $bot);
+
+                $board[$move[0]][$move[1]] = '';
+            }
+        };
+
+        foreach ($this->allBotsImplementation as $bot) {
+            foreach (Board::VALID_UNITS as $whoStarts) {
+                $boardArray = (new Board())->toArray();
+                $recursiveFunction($whoStarts, Board::VALID_UNITS[0], Board::VALID_UNITS[1], $boardArray, $bot);
+            }
+        }
+
+        $this->assertTrue(true, 'all bots where able to play all possible moves successfully.');
     }
 
     public function testTryingToGetTheNextMoveUsingAnInvalidPlayerUnit()
@@ -47,7 +95,7 @@ class MoveInterfaceTest extends TestCase
                         'The bot "%s" dit not return the expected value when using the invalid unit "%s" (byte code "%s").',
                         get_class($bot),
                         $invalidUnit,
-                        $invalidUnitByteCode -1
+                        $invalidUnitByteCode - 1
                     )
                 );
             }
@@ -159,7 +207,8 @@ class MoveInterfaceTest extends TestCase
             $this->assertJsonStringEqualsJsonString(
                 json_encode([-1, -1, null]),
                 json_encode($nextMove),
-                sprintf('The bot "%s" dit not return the expected result when the board is not full, but the bot already had win the game.', get_class($bot))
+                sprintf('The bot "%s" dit not return the expected result when the board is not full, but the bot already had win the game.',
+                    get_class($bot))
             );
         }
 
@@ -175,9 +224,19 @@ class MoveInterfaceTest extends TestCase
             $this->assertJsonStringEqualsJsonString(
                 json_encode([-1, -1, null]),
                 json_encode($nextMove),
-                sprintf('The bot "%s" dit not return the expected result when the board is not full, but the human already had win the game.', get_class($bot))
+                sprintf('The bot "%s" dit not return the expected result when the board is not full, but the human already had win the game.',
+                    get_class($bot))
             );
         }
 
+    }
+
+    protected function setUp(): void
+    {
+        $this->allBotsImplementation = [
+            new DummyBot(),
+            new RandomBot(),
+            new MinimaxBot(),
+        ];
     }
 }
