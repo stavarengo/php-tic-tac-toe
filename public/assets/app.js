@@ -35,7 +35,7 @@
         },
 
 
-        request: function (method, url, callback, data) {
+        request: function (method, url, callback, data, doNotShowSpinner) {
             var me = this;
 
             if (me.request._inProgress) {
@@ -43,7 +43,10 @@
             }
             me.request._inProgress = true;
 
-            me.nodes.spinner.classList.add('show');
+            if (!doNotShowSpinner) {
+                me.nodes.spinner.classList.add('show');
+            }
+            this.nodes.boardSection.classList.add('board-disabled');
 
             var request = new XMLHttpRequest();
 
@@ -54,11 +57,14 @@
             }
 
             var startTime = Date.now();
-            var requestCallback = function(request) {
+            var requestCallback = function (request) {
                 me.request._inProgress = false;
-                callback(request);
+                callback && callback(request);
                 if (!me.request._inProgress) {
                     me.nodes.spinner.classList.remove('show');
+                    if (me.gameState && me.gameState.game && me.gameState.game.winner) {
+                        me.nodes.boardSection.classList.remove('board-disabled');
+                    }
                 }
             };
 
@@ -87,18 +93,20 @@
             request.send(data);
         },
 
-        deleteGame: function (callback) {
+        deleteGame: function (callback, doNotShowSpinner) {
             var me = this;
             me.request(
                 'DELETE',
                 '/api/board',
                 function (request) {
                     if (request.status === 204) {
-                        callback();
+                        callback && callback();
                     } else {
                         me.defaultRequestErrorHandler(request, 'Why the game did not start?', 204);
                     }
-                }
+                },
+                null,
+                doNotShowSpinner
             );
         },
 
@@ -131,9 +139,18 @@
                 function (request) {
                     if (request.status === 200) {
                         me.updateView(JSON.parse(request.responseText))
+                        if (me.gameState && me.gameState.game && me.gameState.game.winner) {
+                            me.nodes.spinner.classList.remove('show');
+                            me.deleteGame(
+                                function () {
+                                    me.gameState = null;
+                                },
+                                true
+                            );
+                        }
                     } else {
                         me.defaultRequestErrorHandler(request, 'What went wrong?', 200);
-                        errback();
+                        errback && errback();
                     }
                 },
                 JSON.stringify({
@@ -195,9 +212,8 @@
                 }
             }
 
-            this.nodes.boardSection.classList.remove('d-none');
-
             if (game.winner) {
+                this.nodes.boardSection.classList.add('board-disabled');
                 this.nodes.result.innerHTML = 'It is a draw!';
                 if (game.winner.result === game.units.human) {
                     this.nodes.result.innerHTML = 'You win!<i class="far fa-surprise fa-2x ml-4"></i>';
@@ -223,11 +239,14 @@
                     this.nodes.footerSection.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'})
                 }.bind(this), 500);
             } else {
+                this.nodes.boardSection.classList.remove('board-disabled');
                 this.nodes.footerSection.classList.add('d-none');
                 this.nodes.startNewGame.classList.add('d-none');
                 // this.nodes.startNewGame.classList.remove('bg-light');
                 this.nodes.resultSection.classList.add('d-none');
             }
+
+            this.nodes.boardSection.classList.remove('d-none');
         },
 
         defaultRequestErrorHandler: function (request, errorMessageTitle, expectedStatusCode) {
@@ -248,9 +267,16 @@
             if (me.gameState.game.board[row][col]) {
                 return;
             }
+            if (me.gameState.game.winner) {
+                return;
+            }
+            if (me.request._inProgress) {
+                return;
+            }
+
             me.gameState.game.board[row][col] = me.gameState.game.units.human;
             me.updateView(me.gameState);
-            me.setHumanMove(row, col, function() {
+            me.setHumanMove(row, col, function () {
                 me.gameState.game.board[row][col] = '';
                 me.updateView(me.gameState);
             })

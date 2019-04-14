@@ -14,18 +14,8 @@ body {
     color: #624c47;
 }
 
-.fa-circle:hover,
-.fa-circle:focus {
-    color: #443532;
-}
-
 .fa-times {
     color: #afd9c8;
-}
-
-.fa-times:hover,
-.fa-times:focus {
-    color: #8cc9b0;
 }
 
 .board .cell {
@@ -33,11 +23,21 @@ body {
 }
 
 .board .cell.empty,
-#start-game-human-x i,
-#start-game-human-o i
+#start-new-game i
 {
     cursor: pointer;
 }
+
+#start-new-game i.fa-circle:hover,
+#start-new-game i.fa-circle:focus {
+    color: #443532;
+}
+
+#start-new-game i.fa-times:hover,
+#start-new-game i.fa-times:focus {
+    color: #8cc9b0;
+}
+
 .board .cell.empty i
 {
     visibility: hidden;
@@ -59,6 +59,15 @@ body {
 .board .cell.winner-cell i
 {
     color: #F7374B;
+}
+
+#board-section.board-disabled .board .cell.empty:hover i
+{
+    visibility: hidden;
+}
+#board-section.board-disabled .board .cell.empty
+{
+    cursor: default;
 }
 
 .board .cell-0-1,
