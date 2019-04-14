@@ -15,19 +15,19 @@ class Dispatcher implements DispatcherInterface
     /**
      * @var string
      */
-    protected $documentRoot;
+    protected $basePath;
 
     /**
      * Dispatcher constructor.
-     * @param string $documentRoot
+     * @param string $basePath
      */
-    public function __construct(string $documentRoot)
+    public function __construct(string $basePath)
     {
-        $this->documentRoot = $documentRoot;
+        $this->basePath = $basePath;
     }
 
     /**
-     * @param string $documentRoot
+     * @param string $basePath
      * @param \Throwable $e
      * @return DispatcherResponse
      * @throws Exception\DocumentRootIsRequired
@@ -37,9 +37,9 @@ class Dispatcher implements DispatcherInterface
      * @throws Exception\UnexpectedErrorWhileRenderingView
      * @throws Exception\ViewFileNotFound
      */
-    public static function getError500Response(string $documentRoot, \Throwable $e): DispatcherResponse
+    public static function getError500Response(string $basePath, \Throwable $e): DispatcherResponse
     {
-        $content = self::getView($documentRoot)->render('500.phtml', ['exception' => $e], '_template.phtml');
+        $content = self::getView($basePath)->render('500.phtml', ['exception' => $e], '_template.phtml');
 
         return new \TicTacToe\App\Dispatcher\DispatcherResponse(
             500,
@@ -49,7 +49,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * @param string $documentRoot
+     * @param string $basePath
      * @return DispatcherResponse
      * @throws Exception\DocumentRootIsRequired
      * @throws Exception\PublicDirectoryPathCanNotBeRelative
@@ -58,9 +58,9 @@ class Dispatcher implements DispatcherInterface
      * @throws Exception\UnexpectedErrorWhileRenderingView
      * @throws Exception\ViewFileNotFound
      */
-    public static function getError404Response(string $documentRoot): DispatcherResponse
+    public static function getError404Response(string $basePath): DispatcherResponse
     {
-        $content = self::getView($documentRoot)->render('404.phtml', [], '_template.phtml');
+        $content = self::getView($basePath)->render('404.phtml', [], '_template.phtml');
 
         return new \TicTacToe\App\Dispatcher\DispatcherResponse(
             404,
@@ -70,17 +70,14 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * @param string $documentRoot
+     * @param string $basePath
      * @return View
      * @throws Exception\DocumentRootIsRequired
      * @throws Exception\PublicDirectoryPathCanNotBeRelative
      * @throws Exception\PublicDirectoryPathIsRequired
      */
-    private static function getView(string $documentRoot): View
+    private static function getView(string $basePath): View
     {
-        $publicDirectoryPath = realpath(__DIR__ . '/../../public');
-        $basePath = (new \TicTacToe\WebUi\BasePathDetector())->detect($documentRoot, $publicDirectoryPath);
-
         return new \TicTacToe\WebUi\View($basePath, __DIR__ . '/views');
     }
 
@@ -112,7 +109,7 @@ class Dispatcher implements DispatcherInterface
             'gameState' => $board ? new \TicTacToe\Api\ResponseBody\GameState($board) : null,
         ];
 
-        $content = self::getView($this->documentRoot)->render('index.phtml', $viewVariables, '_template.phtml', $templateVariables);
+        $content = self::getView($this->basePath)->render('index.phtml', $viewVariables, '_template.phtml', $templateVariables);
 
         return new DispatcherResponse(200, $content, ['Content-Type' => 'text/html; charset=UTF-8']);
     }

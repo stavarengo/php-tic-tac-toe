@@ -40,4 +40,69 @@ class DispatcherAggregateTest extends TestCase
 
         $this->assertNull((new DispatcherAggregate('/', '/', $dispatchers))->dispatch(new ArrayStorage()));
     }
+
+    public function testGetRequestRoute()
+    {
+        $expectedRoutes = [
+            '/',
+            '/api/board',
+        ];
+
+        foreach ($expectedRoutes as $expectedRoute) {
+            foreach (['', 'public', 'html/public'] as $basePath) {
+                $basePathVariations = [
+                    $basePath,
+                    "/$basePath",
+                    "$basePath/",
+                    "/$basePath/",
+                ];
+
+                foreach ($basePathVariations as $basePathVariation) {
+                    $failMsg = 'Failed when base path was "%s" and request URI was "%s"';
+
+                    $requestUriVariations = [
+                        $basePathVariation . $expectedRoute,
+                        $basePathVariation . ltrim($expectedRoute, '/'),
+                        $basePathVariation . rtrim($expectedRoute, '/'),
+                        $basePathVariation . trim($expectedRoute, '/'),
+                    ];
+                    foreach ($requestUriVariations as $requestUriVariation) {
+                        $requestUriVariation = preg_replace('~^/+(.*)~', '/$1', $requestUriVariation);
+
+                        if (parse_url($requestUriVariation) === false) {
+                            continue;
+                        }
+
+                        $fullRequestUri = $requestUriVariation;
+                        $this->assertEquals(
+                            $expectedRoute,
+                            DispatcherAggregate::getRequestRoute($basePathVariation, $fullRequestUri),
+                            sprintf($failMsg, $basePathVariation, $fullRequestUri)
+                        );
+
+                        $fullRequestUri = "$requestUriVariation?param=value";
+                        $this->assertEquals(
+                            $expectedRoute,
+                            DispatcherAggregate::getRequestRoute($basePathVariation, $fullRequestUri),
+                            sprintf($failMsg, $basePathVariation, $fullRequestUri)
+                        );
+
+                        $fullRequestUri = "$requestUriVariation#compoent";
+                        $this->assertEquals(
+                            $expectedRoute,
+                            DispatcherAggregate::getRequestRoute($basePathVariation, $fullRequestUri),
+                            sprintf($failMsg, $basePathVariation, $fullRequestUri)
+                        );
+
+                        $fullRequestUri = "$requestUriVariation?param=value#component";
+                        $this->assertEquals(
+                            $expectedRoute,
+                            DispatcherAggregate::getRequestRoute($basePathVariation, $fullRequestUri),
+                            sprintf($failMsg, $basePathVariation, $fullRequestUri)
+                        );
+                    }
+                }
+            }
+        }
+    }
 }

@@ -12,28 +12,52 @@ class DispatcherAggregate
     /**
      * @var string
      */
-    protected $documentRoot;
+    protected $basePath;
 
-    /**
-     * @var DispatcherInterface[]
-     */
-    protected $dispatchers;
     /**
      * @var string
      */
     private $requestUri;
 
     /**
+     * @var DispatcherInterface[]
+     */
+    protected $dispatchers;
+
+    /**
      * DispatcherAggregate constructor.
-     * @param string $documentRoot
+     * @param string $basePath
      * @param string $requestUri
      * @param DispatcherInterface[] $dispatchers
      */
-    public function __construct(string $documentRoot, string $requestUri, array $dispatchers)
+    public function __construct(string $basePath, string $requestUri, array $dispatchers)
     {
         $this->dispatchers = $dispatchers;
-        $this->documentRoot = $documentRoot;
+        $this->basePath = $basePath;
         $this->requestUri = $requestUri;
+    }
+
+    /**
+     * @param string $documentRoot
+     * @param string $requestUri
+     * @return string
+     * @throws \TicTacToe\WebUi\Exception\DocumentRootIsRequired
+     * @throws \TicTacToe\WebUi\Exception\PublicDirectoryPathCanNotBeRelative
+     * @throws \TicTacToe\WebUi\Exception\PublicDirectoryPathIsRequired
+     */
+    public static function getRequestRoute(string $basePath, string $requestUri): string
+    {
+        $basePath = rtrim($basePath, '/');
+
+        $requestUri = parse_url($requestUri, PHP_URL_PATH);
+        $requestUri = $requestUri === null ? '' : $requestUri;
+        $requestUri = rtrim($requestUri, '/');
+
+        $requestRoute = preg_replace(sprintf('~^%s~', preg_quote($basePath, '~')), '', $requestUri);
+        $requestRoute = preg_replace('~^(.*?)index.php$~', '$1', $requestRoute);
+        $requestRoute = '/' . ltrim($requestRoute, '/');
+
+        return $requestRoute;
     }
 
     /**
@@ -49,13 +73,7 @@ class DispatcherAggregate
      */
     public function dispatch(StorageInterface $storage): ?DispatcherResponse
     {
-        $publicDirectoryPath = realpath(__DIR__ . '/../../../public');
-        $basePath = (new \TicTacToe\WebUi\BasePathDetector())->detect($this->documentRoot, $publicDirectoryPath);
-
-        $requestUrlPath = parse_url($this->requestUri, PHP_URL_PATH);
-        $requestRoute = preg_replace(sprintf('~^%s~', preg_quote($basePath, '~')), '', rtrim($requestUrlPath, '/'));
-        $requestRoute = preg_replace('~^(.*?)index.php$~', '$1', $requestRoute);
-        $requestRoute = "/$requestRoute";
+        $requestRoute = self::getRequestRoute($this->basePath, $this->requestUri);
 
         $dispatcherResponse = null;
         foreach ($this->dispatchers as $dispatcher) {

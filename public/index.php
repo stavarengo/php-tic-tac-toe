@@ -17,24 +17,31 @@ require __DIR__ . '/../vendor/autoload.php';
  * the global scope.
  */
 (function () {
+    $basePath = null;
+    $getBasePath = function() use (&$basePath) {
+        if (!$basePath) {
+            $basePath = (new \TicTacToe\WebUi\BasePathDetector())->detect($_SERVER['DOCUMENT_ROOT'], __DIR__);
+        }
+        return $basePath;
+    };
     try {
         session_start();
         $storage = new \TicTacToe\Api\Storage\PhpSessionStorage();
         $dispatcherAggregate = new \TicTacToe\App\Dispatcher\DispatcherAggregate(
-            $_SERVER['DOCUMENT_ROOT'],
+            $getBasePath(),
             $_SERVER['REQUEST_URI'],
             [
                 new \TicTacToe\Api\Dispatcher($_SERVER['REQUEST_METHOD']),
-                new \TicTacToe\WebUi\Dispatcher($_SERVER['DOCUMENT_ROOT']),
+                new \TicTacToe\WebUi\Dispatcher($getBasePath()),
             ]
         );
 
         $dispatcherResponse = $dispatcherAggregate->dispatch($storage);
         if (!$dispatcherResponse) {
-            $dispatcherResponse = \TicTacToe\WebUi\Dispatcher::getError404Response($_SERVER['DOCUMENT_ROOT']);
+            $dispatcherResponse = \TicTacToe\WebUi\Dispatcher::getError404Response($getBasePath());
         }
     } catch (\Throwable $e) {
-        $dispatcherResponse = \TicTacToe\WebUi\Dispatcher::getError500Response($_SERVER['DOCUMENT_ROOT'], $e);
+        $dispatcherResponse = \TicTacToe\WebUi\Dispatcher::getError500Response($getBasePath(), $e);
     }
 
     http_response_code($dispatcherResponse->getStatusCode());
