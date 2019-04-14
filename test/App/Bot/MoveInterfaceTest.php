@@ -45,7 +45,6 @@ class MoveInterfaceTest extends TestCase
             } else {
                 try {
                     $move = $bot->makeMove($board, $humanUnit);
-                    $board[$move[0]][$move[1]] = $move[2];
                 } catch (\Throwable $e) {
                     $this->fail(
                         sprintf(
@@ -57,6 +56,22 @@ class MoveInterfaceTest extends TestCase
                         )
                     );
                 }
+
+                $failMsg = sprintf(
+                    'The bot "%s" returned an invalid move "%s" for the board "%s".',
+                    get_class($bot),
+                    json_encode($move),
+                    json_encode($board)
+                );
+
+                $this->assertArrayHasKey(0, $move, $failMsg);
+                $this->assertIsInt($move[0], $failMsg);
+                $this->assertArrayHasKey(1, $move, $failMsg);
+                $this->assertIsInt($move[1], $failMsg);
+                $this->assertArrayHasKey(2, $move, $failMsg);
+                $this->assertEquals($botUnit, $move[2], $failMsg);
+
+                $board[$move[0]][$move[1]] = $move[2];
 
                 $recursiveFunction($whoPlaysNext, $humanUnit, $botUnit, $board, $bot);
 
