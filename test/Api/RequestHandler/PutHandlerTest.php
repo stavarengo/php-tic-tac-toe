@@ -279,7 +279,7 @@ class PutHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(Error::class, $responseBody);
 
-        $this->assertEquals('There is already done.', $responseBody->getDetail());
+        $this->assertEquals('The game is already done.', $responseBody->getDetail());
     }
 
     public function testTryToSetMoveButInAGameThatHasEmptySlotsButWeAlreadyHaveAWinner()
@@ -306,7 +306,7 @@ class PutHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(Error::class, $responseBody);
 
-        $this->assertEquals('There is already done.', $responseBody->getDetail());
+        $this->assertEquals('The game is already done.', $responseBody->getDetail());
     }
 
     private function countPlayerMoves(string $unitToCount, Board $board): int

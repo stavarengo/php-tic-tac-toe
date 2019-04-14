@@ -56,7 +56,7 @@ class PutHandler implements RequestHandlerInterface
         }
 
         if ($this->finalResultChecker->getFinalResult($board)) {
-            return new Response(new Error('There is already done.'), 409);
+            return new Response(new Error('The game is already done.'), 409);
         }
 
         try {

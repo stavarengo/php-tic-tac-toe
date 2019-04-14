@@ -43,7 +43,7 @@ class PostHandler implements RequestHandlerInterface
 
         if ($storage->has(self::STORAGE_KEY_GAME_BOARD)) {
             return new Response(
-                new Error('There already another game in progress. To start a new game you must delete the one currently in progress.'),
+                new Error('There is already another game in progress. To start a new game you must delete the one currently in progress.'),
                 409
             );
         }

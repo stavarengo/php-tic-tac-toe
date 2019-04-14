@@ -2,4 +2,47 @@
 /** @var \TicTacToe\WebUi\View $this */
 ?>
 
-<h1>It works</h1>
+<div class="row h-100 align-items-center justify-content-center align-content-center">
+    <div class="col-12 mt-2 mb-5">
+        <div class="row">
+            <div class="col text-center title">
+                <h1>Tic Tac Toe</h1>
+                <h4>You won't beatme. But you can try.</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 my-5 d-none" id="board-section">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-11 col-sm-8 col-md-7 col-lg-6 col-xl-4 text-center">
+                <div class="row board">
+                    <?php for ($row = 0; $row < 3; $row++) : ?>
+                        <?php for ($col = 0; $col < 3; $col++) : ?>
+                            <div
+                                    id="cell-<?php echo $row ?>-<?php echo $col ?>"
+                                    class="col-4 al cell cell-<?php echo $row ?>-<?php echo $col ?>"
+                            ></div>
+                        <?php endfor; ?>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row d-none py-3 bg-info text-white" id="result-section">
+            <div class="col text-center">
+                <h4 id="result"></h4>
+            </div>
+        </div>
+        <div class="row align-items-center py-3" id="start-new-game">
+            <div class="col text-right" id="start-game-human-x">
+                <i class="fas fa-times fa-5x"></i>
+            </div>
+            <div class="col text-center" id="prompt">
+                <h3>Choose you symbol</h3>
+            </div>
+            <div class="col text-left" id="start-game-human-o">
+                <i class="far fa-circle fa-5x"></i>
+            </div>
+        </div>
+    </div>
+</div>

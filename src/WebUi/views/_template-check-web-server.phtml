@@ -1,8 +1,8 @@
 <?php
 /** @var \TicTacToe\WebUi\View $this */
 
-if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false
-    || preg_match('/PHP.+Development Server/', $_SERVER['SERVER_SOFTWARE'])
+if (isset($_SERVER['SERVER_SOFTWARE']) && (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false
+    || preg_match('/PHP.+Development Server/', $_SERVER['SERVER_SOFTWARE']))
 ) {
     return;
 }
@@ -15,7 +15,7 @@ if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false
         <a href="https://www.php.net/manual/en/features.commandline.webserver.php" target="_blank">PHP's Built-in web
             server</a>.
         <br>
-        You are using <code><?php echo $_SERVER['SERVER_SOFTWARE'] ?></code>.
+        You are using <code><?php echo $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown! $_SERVER[\'SERVER_SOFTWARE\'] not set.' ?></code>.
     </p>
     <hr>
     <p class="mb-0">

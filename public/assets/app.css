@@ -1,3 +1,61 @@
-h1 {
-    color: red;
+html,
+body {
+    height: 100%;
 }
+
+body {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: #6f6f6f;
+}
+
+.fa-circle {
+    color: #624c47;
+}
+
+.fa-circle:hover,
+.fa-circle:focus {
+    color: #443532;
+    cursor: pointer;
+}
+
+.fa-times {
+    color: #afd9c8;
+}
+
+.fa-times:hover,
+.fa-times:focus {
+    color: #8cc9b0;
+    cursor: pointer;
+}
+
+.board .cell {
+    cursor: pointer;
+    min-height: 7em;
+}
+
+.board .cell.winner-cell i
+{
+    color: #F7374B;
+}
+
+.board .cell-0-1,
+.board .cell-1-1,
+.board .cell-2-1 {
+    border-right: 2px solid #dcebdf;
+    border-left: 2px solid #dcebdf;
+}
+
+.board .cell-1-0,
+.board .cell-1-1,
+.board .cell-1-2 {
+    border-top: 2px solid #dcebdf;
+    border-bottom: 2px solid #dcebdf;
+}
+
+#start-new-game.starting-game
+{
+    opacity: .4;
+}
+

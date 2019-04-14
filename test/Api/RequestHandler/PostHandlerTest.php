@@ -145,7 +145,7 @@ class PostHandlerTest extends TestCase
         $this->assertInstanceOf(Error::class, $responseBody);
 
         $this->assertEquals(
-            'There already another game in progress. To start a new game you must delete the one currently in progress.',
+            'There is already another game in progress. To start a new game you must delete the one currently in progress.',
             $responseBody->getDetail()
         );
     }

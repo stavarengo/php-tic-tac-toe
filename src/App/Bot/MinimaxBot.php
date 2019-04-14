@@ -33,31 +33,40 @@ class MinimaxBot implements \MoveInterface
         $this->finalResultChecker = new FinalResultChecker();
     }
 
-    public static function getFinalResult(array $b): ?string
+    public static function getWinnerCoordinates(array $board): ?array
     {
-        // Checking for Rows for X or O victory.
+        // Checking Rows
         for ($row = 0; $row < 3; $row++) {
-            if ($b[$row][0] && $b[$row][0] == $b[$row][1] && $b[$row][1] == $b[$row][2]) {
-                return $b[$row][0];
+            if ($board[$row][0] && $board[$row][0] == $board[$row][1] && $board[$row][1] == $board[$row][2]) {
+                return [[$row, 0], [$row, 1], [$row, 2]];
             }
         }
 
-        // Checking for Columns for X or O victory.
+        // Checking Columns
         for ($col = 0; $col < 3; $col++) {
-            if ($b[0][$col] && $b[0][$col] == $b[1][$col] && $b[1][$col] == $b[2][$col]) {
-                return $b[0][$col];
+            if ($board[0][$col] && $board[0][$col] == $board[1][$col] && $board[1][$col] == $board[2][$col]) {
+                return [[0, $col], [1, $col], [2, $col]];
             }
         }
 
-        // Checking for Diagonals for X or O victory.
-        if ($b[0][0] && $b[0][0] == $b[1][1] && $b[1][1] == $b[2][2]) {
-            return $b[0][0];
+        // Checking Diagonals
+        if ($board[0][0] && $board[0][0] == $board[1][1] && $board[1][1] == $board[2][2]) {
+            return [[0, 0], [1, 1], [2, 2]];
         }
-        if ($b[0][2] && $b[0][2] == $b[1][1] && $b[1][1] == $b[2][0]) {
-            return $b[0][2];
+        if ($board[0][2] && $board[0][2] == $board[1][1] && $board[1][1] == $board[2][0]) {
+            return [[0, 2], [1, 1], [2, 0]];
         }
 
-        foreach ($b as $rowIndex => $row) {
+        return null;
+    }
+
+    public static function getFinalResult(array $board): ?string
+    {
+        if ($winnerCoordinates = self::getWinnerCoordinates($board)) {
+            return $board[$winnerCoordinates[0][0]][0];
+        }
+
+        foreach ($board as $rowIndex => $row) {
             foreach ($row as $colIndex => $col) {
                 if (!$col) {
                     // There still has empty place in the board
@@ -66,6 +75,7 @@ class MinimaxBot implements \MoveInterface
             }
         }
 
+        // No winner, no spaces lefts
         return FinalResultChecker::DRAW;
     }
 
@@ -98,7 +108,7 @@ class MinimaxBot implements \MoveInterface
 
     private function findBestMove(array $board, string $botUnit, string $humanUnit): ?array
     {
-        $bestScore = self::MIN_SCORE;
+        $bestScore = null;
         $bestMove = null;
 
         foreach ($board as $rowIndex => $row) {
@@ -108,7 +118,7 @@ class MinimaxBot implements \MoveInterface
                     $board[$rowIndex][$colIndex] = $botUnit;
 
                     $nextMoveScore = $this->minimax($board, 0, false, $botUnit, $humanUnit);
-                    if ($nextMoveScore > $bestScore) {
+                    if ($bestScore === null || $nextMoveScore > $bestScore) {
                         $bestScore = $nextMoveScore;
                         $bestMove = [$rowIndex, $colIndex];
                     }
