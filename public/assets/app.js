@@ -47,7 +47,7 @@
 
             var request = new XMLHttpRequest();
 
-            request.open(method, url, true);
+            request.open(method, w.__BASE_PATH__.replace(/\/$/, '') + url, true);
 
             if (method === 'POST' || method === 'PUT') {
                 request.setRequestHeader('Content-Type', 'application/json');
