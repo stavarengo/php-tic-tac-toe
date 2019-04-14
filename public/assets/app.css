@@ -17,7 +17,6 @@ body {
 .fa-circle:hover,
 .fa-circle:focus {
     color: #443532;
-    cursor: pointer;
 }
 
 .fa-times {
@@ -27,12 +26,34 @@ body {
 .fa-times:hover,
 .fa-times:focus {
     color: #8cc9b0;
-    cursor: pointer;
 }
 
 .board .cell {
-    cursor: pointer;
     min-height: 7em;
+}
+
+.board .cell.empty,
+#start-game-human-x i,
+#start-game-human-o i
+{
+    cursor: pointer;
+}
+.board .cell.empty i
+{
+    visibility: hidden;
+}
+.board .cell.empty i.fa-times
+{
+    color: #DCEBDF;
+}
+.board .cell.empty i.fa-circle
+{
+    color: #bd9a8a;
+}
+
+.board .cell.empty:hover i
+{
+    visibility: visible;
 }
 
 .board .cell.winner-cell i
@@ -53,9 +74,3 @@ body {
     border-top: 2px solid #dcebdf;
     border-bottom: 2px solid #dcebdf;
 }
-
-#start-new-game.starting-game
-{
-    opacity: .4;
-}
-

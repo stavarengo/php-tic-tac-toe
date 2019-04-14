@@ -2,24 +2,28 @@
 /** @var \TicTacToe\WebUi\View $this */
 ?>
 
-<div class="row h-100 align-items-center justify-content-center align-content-center">
-    <div class="col-12 mt-2 mb-5">
+<div class="row align-items-center justify-content-center align-content-center" style="min-height: 100%">
+    <div class="col-12 pt-1 pt-sm-2 pb-1 pb-sm-3">
         <div class="row">
-            <div class="col text-center title">
+            <div class="col text-center">
                 <h1>Tic Tac Toe</h1>
-                <h4>You won't beatme. But you can try.</h4>
+                <h4>You won't beat me, but you can try.</h4>
             </div>
         </div>
     </div>
-    <div class="col-12 my-5 d-none" id="board-section">
+
+    <div class="col-12 pb-3 text-center fade" id="spinner">
+        <i class="fas fa-cog fa-3x fa-spin text-dark"></i>
+    </div>
+
+    <div class="col-12 pb-4 pb-sm-5 d-none" id="board-section">
         <div class="row justify-content-center align-items-center">
             <div class="col-11 col-sm-8 col-md-7 col-lg-6 col-xl-4 text-center">
                 <div class="row board">
                     <?php for ($row = 0; $row < 3; $row++) : ?>
                         <?php for ($col = 0; $col < 3; $col++) : ?>
-                            <div
-                                    id="cell-<?php echo $row ?>-<?php echo $col ?>"
-                                    class="col-4 al cell cell-<?php echo $row ?>-<?php echo $col ?>"
+                            <div id="cell-<?php echo $row ?>-<?php echo $col ?>"
+                                 class="col-4 d-flex justify-content-center align-items-center cell cell-<?php echo $row ?>-<?php echo $col ?>"
                             ></div>
                         <?php endfor; ?>
                     <?php endfor; ?>
@@ -27,20 +31,20 @@
             </div>
         </div>
     </div>
-    <div class="col-12">
-        <div class="row d-none py-3 bg-info text-white" id="result-section">
+    <div class="col-12 d-none" id="footer-section">
+        <div class="row py-4 bg-info text-white d-none" id="result-section">
             <div class="col text-center">
-                <h4 id="result"></h4>
+                <h4 id="result" class="m-0"></h4>
             </div>
         </div>
-        <div class="row align-items-center py-3" id="start-new-game">
-            <div class="col text-right" id="start-game-human-x">
+        <div class="row align-items-center py-4 py-sm-3 d-none bg-light" id="start-new-game">
+            <div class="col-6 col-sm-4 order-2 order-sm-1 pl-2 pl-sm-0 text-right" id="start-game-human-x">
                 <i class="fas fa-times fa-5x"></i>
             </div>
-            <div class="col text-center" id="prompt">
-                <h3>Choose you symbol</h3>
+            <div class="col-12 col-sm-4 order-1 order-sm-2 pb-2 pb-sm-0 text-center" id="prompt">
+                <h3>Choose your symbol to play</h3>
             </div>
-            <div class="col text-left" id="start-game-human-o">
+            <div class="col-6 col-sm-4 order-3 order-sm-3 pr-2 pr-sm-0 text-left" id="start-game-human-o">
                 <i class="far fa-circle fa-5x"></i>
             </div>
         </div>

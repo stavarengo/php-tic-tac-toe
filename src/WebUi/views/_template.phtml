@@ -11,6 +11,9 @@ $gameState = $this->get('gameState');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link href="<?php echo $this->basePath('favicon.ico') ?>" rel="icon" />
+
+
     <link rel="stylesheet" href="<?php echo $this->basePath('assets/bootstrap.min.4.3.1.css') ?>"/>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
@@ -22,9 +25,6 @@ $gameState = $this->get('gameState');
 </head>
 <body>
     <main id="main" role="main" class="container-fluid h-100">
-        <?php include __DIR__ . '/_template-check-web-server.phtml'; ?>
-        <?php //include __DIR__ . '/_template-visibility-util.phtml'; ?>
-
         <?php echo $this->get('content') ?>
     </main>
 
