@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
-namespace TicTacToe\Test\App;
+namespace TicTacToe\Test\WebUi;
 
 use PHPUnit\Framework\TestCase;
 use TicTacToe\WebUi\Exception\ViewFileNotFound;
