@@ -20,13 +20,13 @@ if (!($exception instanceof \Throwable)) {
 <h2>Additional information:</h2>
 <h3><?php echo get_class($exception) ?></h3>
 <dl>
-    <dt>File:</dt>
-    <dd>
-        <pre><?php echo $exception->getFile() ?>:<?php echo $exception->getLine() ?></pre>
-    </dd>
     <dt>Message:</dt>
     <dd>
         <pre><?php echo htmlspecialchars($exception->getMessage()) ?></pre>
+    </dd>
+    <dt>File:</dt>
+    <dd>
+        <pre><?php echo $exception->getFile() ?>:<?php echo $exception->getLine() ?></pre>
     </dd>
     <dt>Stack trace:</dt>
     <dd>
@@ -49,13 +49,13 @@ if (!$exception->getPrevious()) {
         <li>
             <h3><?php echo get_class($previousException) ?></h3>
             <dl>
-                <dt>File:</dt>
-                <dd>
-                    <pre><?php echo $previousException->getFile() ?>:<?php echo $previousException->getLine() ?></pre>
-                </dd>
                 <dt>Message:</dt>
                 <dd>
                     <pre><?php echo htmlspecialchars($previousException->getMessage()) ?></pre>
+                </dd>
+                <dt>File:</dt>
+                <dd>
+                    <pre><?php echo $previousException->getFile() ?>:<?php echo $previousException->getLine() ?></pre>
                 </dd>
                 <dt>Stack trace:</dt>
                 <dd>

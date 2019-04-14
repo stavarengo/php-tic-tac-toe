@@ -18,14 +18,22 @@ require __DIR__ . '/../vendor/autoload.php';
  */
 (function () {
     $basePath = null;
-    $getBasePath = function() use (&$basePath) {
+    $getBasePath = function () use (&$basePath) {
         if (!$basePath) {
             $basePath = (new \TicTacToe\WebUi\BasePathDetector())->detect($_SERVER['DOCUMENT_ROOT'], __DIR__);
         }
         return $basePath;
     };
     try {
+        set_error_handler(function ($errno, $errstr = '', $errfile = '', $errline = 0) {
+            throw new \ErrorException('Failed to start PHP session. ' . $errstr, 0, $errno, $errfile, $errline);
+        });
         session_start();
+        restore_error_handler();
+        if (session_status() == PHP_SESSION_NONE) {
+            throw new \RuntimeException('Failed to start PHP session.');
+        }
+
         $storage = new \TicTacToe\Api\Storage\PhpSessionStorage();
         $dispatcherAggregate = new \TicTacToe\App\Dispatcher\DispatcherAggregate(
             $getBasePath(),
