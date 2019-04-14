@@ -33,52 +33,6 @@ class MinimaxBot implements \MoveInterface
         $this->finalResultChecker = new FinalResultChecker();
     }
 
-    public static function getWinnerCoordinates(array $board): ?array
-    {
-        // Checking Rows
-        for ($row = 0; $row < 3; $row++) {
-            if ($board[$row][0] && $board[$row][0] == $board[$row][1] && $board[$row][1] == $board[$row][2]) {
-                return [[$row, 0], [$row, 1], [$row, 2]];
-            }
-        }
-
-        // Checking Columns
-        for ($col = 0; $col < 3; $col++) {
-            if ($board[0][$col] && $board[0][$col] == $board[1][$col] && $board[1][$col] == $board[2][$col]) {
-                return [[0, $col], [1, $col], [2, $col]];
-            }
-        }
-
-        // Checking Diagonals
-        if ($board[0][0] && $board[0][0] == $board[1][1] && $board[1][1] == $board[2][2]) {
-            return [[0, 0], [1, 1], [2, 2]];
-        }
-        if ($board[0][2] && $board[0][2] == $board[1][1] && $board[1][1] == $board[2][0]) {
-            return [[0, 2], [1, 1], [2, 0]];
-        }
-
-        return null;
-    }
-
-    public static function getFinalResult(array $board): ?string
-    {
-        if ($winnerCoordinates = self::getWinnerCoordinates($board)) {
-            return $board[$winnerCoordinates[0][0]][0];
-        }
-
-        foreach ($board as $rowIndex => $row) {
-            foreach ($row as $colIndex => $col) {
-                if (!$col) {
-                    // There still has empty place in the board
-                    return null;
-                }
-            }
-        }
-
-        // No winner, no spaces lefts
-        return FinalResultChecker::DRAW;
-    }
-
     public function makeMove(array $boardState, string $playerUnit = 'X'): array
     {
         if (!Board::isValidUnit($playerUnit)) {
@@ -139,7 +93,7 @@ class MinimaxBot implements \MoveInterface
         string $maximizingPlayer,
         string $minimizingPlayer
     ): int {
-        $finalResult = MinimaxBot::getFinalResult($board);
+        $finalResult = $this->finalResultChecker->getFinalResultFromBoardArray($board);
         if ($finalResult == $maximizingPlayer) {
             $finalScore = self::MAX_SCORE;
             return $finalScore;

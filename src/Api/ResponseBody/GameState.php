@@ -6,7 +6,7 @@ namespace TicTacToe\Api\ResponseBody;
 
 
 use TicTacToe\App\Board\Board;
-use TicTacToe\App\Bot\MinimaxBot;
+use TicTacToe\App\FinalResultChecker;
 
 class GameState implements ResponseBodyInterface
 {
@@ -14,10 +14,15 @@ class GameState implements ResponseBodyInterface
      * @var Board
      */
     protected $board;
+    /**
+     * @var FinalResultChecker
+     */
+    protected $finalResultChecker;
 
     public function __construct(?Board $board)
     {
         $this->board = $board;
+        $this->finalResultChecker = new FinalResultChecker();
     }
 
     /**
@@ -36,10 +41,10 @@ class GameState implements ResponseBodyInterface
         $winner = null;
 
         if ($this->board) {
-            if ($finalResults = MinimaxBot::getFinalResult($this->getBoard()->toArray())) {
+            if ($finalResults = $this->finalResultChecker->getFinalResult($this->getBoard())) {
                 $winner = [
                     'result' => $finalResults,
-                    'coordinates' => MinimaxBot::getWinnerCoordinates($this->getBoard()->toArray()),
+                    'coordinates' => $this->finalResultChecker->getWinnerCoordinates($this->getBoard()),
                 ];
             }
             $gameStateAsArray['game'] = [

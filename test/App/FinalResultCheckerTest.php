@@ -19,6 +19,7 @@ class FinalResultCheckerTest extends TestCase
             [[1, 2, 3], [], []],
             [['', ''], ['', '', ''], ['', '']],
             [['', '', ''], ['', '', ''], ['', '']],
+            [['X', 'X', 'X'], ['', '', ''], ['', '']],
         ];
 
         $finalResultChecker = new FinalResultChecker();
@@ -30,6 +31,11 @@ class FinalResultCheckerTest extends TestCase
             );
             $this->assertFalse(
                 $finalResultChecker->isDrawFromBoardArray($invalidBoard),
+                sprintf('Wrong result when using this invalid board "%s".', json_encode($invalidBoard))
+            );
+
+            $this->assertNull(
+                $finalResultChecker->getWinnerCoordinatesFromBoardArray($invalidBoard),
                 sprintf('Wrong result when using this invalid board "%s".', json_encode($invalidBoard))
             );
         }
@@ -53,7 +59,7 @@ class FinalResultCheckerTest extends TestCase
 
             // Diagonals victory
             [[0, 0], [1, 1], [2, 2]],
-            [[2, 0], [1, 1], [0, 2]],
+            [[0, 2], [1, 1], [2, 0]],
         ];
 
         foreach ([$unit1, $unit2] as $winnerUnit) {
@@ -66,21 +72,38 @@ class FinalResultCheckerTest extends TestCase
                 $this->assertEquals(
                     $winnerUnit,
                     $finalResultChecker->getFinalResult($board),
-                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit, json_encode($coordinates))
+                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit,
+                        json_encode($coordinates))
                 );
                 $this->assertEquals(
                     $winnerUnit,
                     $finalResultChecker->getFinalResultFromBoardArray($board->toArray()),
-                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit, json_encode($coordinates))
+                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit,
+                        json_encode($coordinates))
                 );
 
                 $this->assertFalse(
                     $finalResultChecker->isDraw($board),
-                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit, json_encode($coordinates))
+                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit,
+                        json_encode($coordinates))
                 );
                 $this->assertFalse(
                     $finalResultChecker->isDrawFromBoardArray($board->toArray()),
-                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit, json_encode($coordinates))
+                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit,
+                        json_encode($coordinates))
+                );
+
+                $this->assertJsonStringEqualsJsonString(
+                    json_encode($coordinates),
+                    json_encode($finalResultChecker->getWinnerCoordinates($board)),
+                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit,
+                        json_encode($coordinates))
+                );
+                $this->assertJsonStringEqualsJsonString(
+                    json_encode($coordinates),
+                    json_encode($finalResultChecker->getWinnerCoordinatesFromBoardArray($board->toArray())),
+                    sprintf('Wrong result when the winner should be "%s", using coordinates "%s".', $winnerUnit,
+                        json_encode($coordinates))
                 );
             }
         }
@@ -104,7 +127,10 @@ class FinalResultCheckerTest extends TestCase
         $this->assertTrue($finalResultChecker->isDraw($board));
         $this->assertTrue($finalResultChecker->isDrawFromBoardArray($board->toArray()));
         $this->assertEquals(FinalResultChecker::DRAW, $finalResultChecker->getFinalResult($board));
-        $this->assertEquals(FinalResultChecker::DRAW, $finalResultChecker->getFinalResultFromBoardArray($board->toArray()));
+        $this->assertEquals(FinalResultChecker::DRAW,
+            $finalResultChecker->getFinalResultFromBoardArray($board->toArray()));
+        $this->assertNull($finalResultChecker->getWinnerCoordinates($board));
+        $this->assertNull($finalResultChecker->getWinnerCoordinatesFromBoardArray($board->toArray()));
     }
 
     public function testBoardIsEmpty()
@@ -116,6 +142,8 @@ class FinalResultCheckerTest extends TestCase
         $this->assertFalse($finalResultChecker->isDrawFromBoardArray($board->toArray()));
         $this->assertNull($finalResultChecker->getFinalResult($board));
         $this->assertNull($finalResultChecker->getFinalResultFromBoardArray($board->toArray()));
+        $this->assertNull($finalResultChecker->getWinnerCoordinates($board));
+        $this->assertNull($finalResultChecker->getWinnerCoordinatesFromBoardArray($board->toArray()));
     }
 
     public function testBoardIsNotEmptyButTheGameIsNotDoneYet()
@@ -129,6 +157,8 @@ class FinalResultCheckerTest extends TestCase
         $this->assertFalse($finalResultChecker->isDrawFromBoardArray($board->toArray()));
         $this->assertNull($finalResultChecker->getFinalResult($board));
         $this->assertNull($finalResultChecker->getFinalResultFromBoardArray($board->toArray()));
+        $this->assertNull($finalResultChecker->getWinnerCoordinates($board));
+        $this->assertNull($finalResultChecker->getWinnerCoordinatesFromBoardArray($board->toArray()));
 
         // Both players has played
         $board = new Board();
@@ -138,5 +168,7 @@ class FinalResultCheckerTest extends TestCase
         $this->assertFalse($finalResultChecker->isDrawFromBoardArray($board->toArray()));
         $this->assertNull($finalResultChecker->getFinalResult($board));
         $this->assertNull($finalResultChecker->getFinalResultFromBoardArray($board->toArray()));
+        $this->assertNull($finalResultChecker->getWinnerCoordinates($board));
+        $this->assertNull($finalResultChecker->getWinnerCoordinatesFromBoardArray($board->toArray()));
     }
 }
