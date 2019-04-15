@@ -8,7 +8,6 @@
 $ composer install
 $ composer run --timeout=0 serve
 ```
-  > You are going to need Internet connection because some CSS and JS files (like [FontAwesome] assets) are loaded from a remote server.
 - The `MoveInterface`:
     - It has not been changed in any way. I did not even add a `namespace` to it.
     - Its implementation can be found in the file `src/App/Bot/MinimaxBot.php`. I used the [Minimax Algorithm]
@@ -29,8 +28,8 @@ $ composer run --timeout=0 serve
 - No dependency on third-party code other than [PHPUnit], [Bootstrap] (CSS library) and [FontAwesome] (icon library). 
   Everything has been written by me, especially for this homework.
 - I received another test as an option (refactoring test), and although I chose this project, it also contemplates some
-  of the requirements from the other test, such as: OOP structure; to use the principles of S.O.L.I.D. and G.R.A.S.P;
-  TDD.
+  of the requirements from the other test, such as: OOP structure; use of principles, like S.O.L.I.D. and G.R.A.S.P; 
+  use of TDD.
 
 **This is the end of the instruction and notes for who is evaluating the test**, but the rest of this README.md is also
 interesting. I invite you to take a quick look, if you have the time.
