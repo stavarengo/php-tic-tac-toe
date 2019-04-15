@@ -47,7 +47,7 @@ After installing the packages, start PHP's built-in web server:
 ```bash
 $ composer run --timeout=0 serve
 ```
-You can then browse to [http://localhost:4000](http://localhost:4000)
+You can then browse to [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 If you want to start the serve using port different of 4000, you can start the server manually:
 ```bash
