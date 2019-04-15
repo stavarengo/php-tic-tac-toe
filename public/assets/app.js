@@ -283,6 +283,7 @@
         },
 
         startNewGameNodeClick: function (humanUnit) {
+            this.nodes.spinner.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'})
             if (this.gameState && this.gameState.game && this.gameState.game.winner) {
                 this.deleteGame(this.startNewGame.bind(this, humanUnit));
             } else {
