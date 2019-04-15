@@ -86,7 +86,7 @@ the API, are:
 All endpoints (except for [`DELETE /api/board`]), when completed successfully, respond with a JSON representing the 
 current game state. The following is the JSON used to represent the game state.
 > If the request fails, then it responds with [The Error Response Layout].
-```json
+```js
 {
     // The `game` attribute will be `null` when there is no game started yet.
     "game": {
@@ -106,9 +106,9 @@ current game state. The following is the JSON used to represent the game state.
     // The current board status.
     // Each position will be either an empty string or one of the units chosen by the players.
     "board": [
-        ['X', '', 'O'],
-        ['X', 'O', ''],
-        ['X', '', 'O'],
+        ["X", "", "O"],
+        ["X", "O", ""],
+        ["X", "", "O"]
     ],
     
     // The `units` attribute contains the units of each player.
@@ -127,7 +127,7 @@ error happens (for example, it would fail if you forget to send a required param
 to represent and error response. 
 > If the request ends successfully, then it responds with [The Game State].
 
- ```json
+ ```js
 {
   // This attribute will always be `true`
   "error": true,
@@ -156,7 +156,7 @@ $ curl -X GET 'http://127.0.0.1:4000/api/board'
 ##### `POST /api/board`
 Starts a new game.
 It expect that the request body contains a JSON with the following layout:
-```json
+```js
 {
   // The unit the human choose for this game: "X" or "O".
   "humanUnit": "X",
@@ -181,7 +181,7 @@ $ curl -X POST 'http://127.0.0.1:4000/api/board' --data-binary '{"humanUnit": "X
 Set the human move.
 This endpoint will store the human move and also perform the bot move.
 It expect that the request body contains a JSON with the following layout:
-```json
+```js
 {
   // The attributes `row` and `column` indicates the position the human choose do move.
   // It sould be an integer greate or equals to 0, and less or equals to 2.
