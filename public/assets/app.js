@@ -16,8 +16,11 @@
             this.nodes.startNewGameHumanO = this.byId('start-game-human-o');
             this.nodes.startNewGameHumanX = this.byId('start-game-human-x');
             this.nodes.prompt = this.byId('prompt');
+            this.nodes.globalToastWrapper = this.byId('global-toast-wrapper');
+            this.nodes.globalToast = this.byId('global-toast');
             this.nodes.toastTitle = this.byId('global-toast-title');
             this.nodes.toastBody = this.byId('global-toast-body');
+            this.nodes.toastCloseButton = this.byId('global-toast-close-button');
 
             for (var row = 0; row < 3; row++) {
                 for (var column = 0; column < 3; column++) {
@@ -30,6 +33,7 @@
 
             this.nodes.startNewGameHumanO.onclick = this.startNewGameNodeClick.bind(this, this.VALID_UNITS[this.VALID_UNITS.indexOf('O')]);
             this.nodes.startNewGameHumanX.onclick = this.startNewGameNodeClick.bind(this, this.VALID_UNITS[this.VALID_UNITS.indexOf('X')]);
+            this.nodes.toastCloseButton.onclick = this.toastCloseButtonClick.bind(this);
 
             this.updateView(w.__INITIAL_STATE__ || null);
         },
@@ -72,12 +76,13 @@
                 if (request.readyState === XMLHttpRequest.DONE) {
                     if (method === 'PUT') {
                         // Why are we delaying the PUT response?
-                        //   The PUT request is when the bot make its decision, and most of the time, it make the
-                        //   decision too, too fast.
+                        //   The PUT request is where the bot make its decision, and most of the time, it make the
+                        //   decision really fast.
                         //   During some "watch tests" (where I ask somebody to use and just watch them), one of these
-                        //   users asked me "why the machine was playing in the same time she was?".
-                        //   So, I thought to give it at least small milliseconds of delay, so no other user would get
-                        //   confused about this, and the others users (who did not get confuse) would even notice it.
+                        //   users asked me: "why the machine was playing in the same time I'm".
+                        //   So, I thought to give it at least some small milliseconds of delay, so no other user would
+                        //   get confused about this, and the others users (the ones who did not get confuse) would even
+                        //   notice it.
                         var timeElapsed = Date.now() - startTime;
                         let minimumTimeToThink = 150;
                         if (timeElapsed < minimumTimeToThink) {
@@ -165,9 +170,29 @@
         },
 
         showError: function (title, msg) {
+            clearTimeout(this.toastTimeOut);
+
             this.nodes.toastTitle.innerHTML = title;
             this.nodes.toastBody.innerHTML = msg;
-            $('#global-toast').toast('show')
+            this.nodes.toastBody.innerHTML = msg;
+
+            this.nodes.globalToastWrapper.classList.remove('d-none');
+            this.nodes.globalToast.classList.add('show');
+
+            this.toastTimeOut = setTimeout(function() {
+                this.hideError();
+            }.bind(this), 10000);
+        },
+
+        hideError: function () {
+            clearTimeout(this.toastTimeOut);
+
+            this.nodes.globalToast.classList.remove('show');
+
+            // This timeout waits for the fade transition to end.
+            this.toastTimeOut = setTimeout(function() {
+                this.nodes.globalToastWrapper.classList.add('d-none');
+            }.bind(this), 200);
         },
 
         updateView: function (gameState) {
@@ -220,7 +245,7 @@
                 } else if (game.winner.result === game.units.bot) {
                     this.nodes.result.innerHTML = 'Robot won!<i class="fas fa-robot fa-2x ml-4"></i>';
                 }
-                this.nodes.prompt.innerHTML = '<h5 class="m-0">Do you want to play again?<br>Choose your symbol</h5>';
+                this.nodes.prompt.innerHTML = '<h5 class="m-0">Do you want to play again?<br>Choose your symbol.</h5>';
 
                 if (game.winner.coordinates) {
                     for (var c = 0; c < game.winner.coordinates.length; c++) {
@@ -289,6 +314,10 @@
             } else {
                 this.startNewGame(humanUnit);
             }
+        },
+
+        toastCloseButtonClick: function() {
+            this.hideError();
         }
     };
 
