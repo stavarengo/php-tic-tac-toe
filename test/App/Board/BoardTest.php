@@ -277,4 +277,14 @@ class BoardTest extends TestCase
             $invalidUnitByteCode++;
         } while ($invalidUnitByteCode < 256);
     }
+
+    public function testToStringMethod()
+    {
+        $expected = <<<TEXT
+_ _ _
+_ _ _
+_ _ _
+TEXT;
+        $this->assertEquals($expected, (new Board())->__toString());
+    }
 }

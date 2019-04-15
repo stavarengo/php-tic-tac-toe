@@ -80,7 +80,7 @@ class BasePathDetectorTest extends TestCase
                 );
             } catch (PublicDirectoryPathCanNotBeRelative $e) {
                 $this->assertEquals(
-                    'You can not use relative path to the public directory. Please provide the absolute path to the public directory.',
+                    'The public directory can not be relative path. Please provide the absolute path to the public directory.',
                     $e->getMessage()
                 );
             }

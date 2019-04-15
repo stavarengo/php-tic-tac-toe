@@ -77,15 +77,23 @@ class PutHandler implements RequestHandlerInterface
         if (!$this->finalResultChecker->getFinalResult($board)) {
             $botMove = $this->bot->makeMove($board->toArray(), $board->getHumanUnit());
             try {
-                $board->set($botMove[0], $botMove[1], $board->getBotUnit());
+                $board->set($botMove[0], $botMove[1], $botMove[2]);
             } catch (CoordinateAlreadyInUse $e) {
-                return new Response(new Error('The bot choose an invalid move. ' . $e->getMessage()), 400);
+                $board->clear($requestBody->row, $requestBody->column);
+
+                return new Response(new Error('The bot chosen an invalid move. ' . $e->getMessage()), 400);
             } catch (InvalidBoardColumn $e) {
-                return new Response(new Error('The bot choose an invalid move. ' . $e->getMessage()), 400);
+                $board->clear($requestBody->row, $requestBody->column);
+
+                return new Response(new Error('The bot chosen an invalid move. ' . $e->getMessage()), 400);
             } catch (InvalidBoardRow $e) {
-                return new Response(new Error('The bot choose an invalid move. ' . $e->getMessage()), 400);
+                $board->clear($requestBody->row, $requestBody->column);
+
+                return new Response(new Error('The bot chosen an invalid move. ' . $e->getMessage()), 400);
             } catch (InvalidBoardUnit $e) {
-                return new Response(new Error('The bot choose an invalid move. ' . $e->getMessage()), 400);
+                $board->clear($requestBody->row, $requestBody->column);
+
+                return new Response(new Error('The bot chosen an invalid move. ' . $e->getMessage()), 400);
             }
         }
 

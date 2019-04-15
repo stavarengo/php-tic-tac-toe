@@ -134,8 +134,14 @@ class MoveInterfaceTest extends TestCase
                 $this->assertFalse(Board::isValidBoard($invalidBoard));
 
                 $nextMove = $bot->makeMove($invalidBoard, 'O');
+
+                $expectedValue = [-1, -1, null];
+                if ($bot instanceof DummyBot) {
+                    $expectedValue = [-2, -2, null];
+                }
+
                 $this->assertEquals(
-                    [-1, -1, null],
+                    $expectedValue,
                     $nextMove,
                     sprintf(
                         'The bot "%s" dit not return the expected value when using this invalid board "%s".',
@@ -200,8 +206,14 @@ class MoveInterfaceTest extends TestCase
 
         foreach ($this->allBotsImplementation as $bot) {
             $nextMove = $bot->makeMove($board->toArray(), $board->getHumanUnit());
+
+            $expectedValue = [-1, -1, null];
+            if ($bot instanceof DummyBot) {
+                $expectedValue = [-3, -3, null];
+            }
+
             $this->assertJsonStringEqualsJsonString(
-                json_encode([-1, -1, null]),
+                json_encode($expectedValue),
                 json_encode($nextMove),
                 sprintf('The bot "%s" dit not return the expected result when the board is full.', get_class($bot))
             );
@@ -219,8 +231,14 @@ class MoveInterfaceTest extends TestCase
 
         foreach ($this->allBotsImplementation as $bot) {
             $nextMove = $bot->makeMove($board->toArray(), $board->getHumanUnit());
+
+            $expectedValue = [-1, -1, null];
+            if ($bot instanceof DummyBot) {
+                $expectedValue = [-3, -3, null];
+            }
+
             $this->assertJsonStringEqualsJsonString(
-                json_encode([-1, -1, null]),
+                json_encode($expectedValue),
                 json_encode($nextMove),
                 sprintf('The bot "%s" dit not return the expected result when the board is not full, but the bot already had win the game.',
                     get_class($bot))
@@ -236,8 +254,14 @@ class MoveInterfaceTest extends TestCase
 
         foreach ($this->allBotsImplementation as $bot) {
             $nextMove = $bot->makeMove($board->toArray(), $board->getHumanUnit());
+
+            $expectedValue = [-1, -1, null];
+            if ($bot instanceof DummyBot) {
+                $expectedValue = [-3, -3, null];
+            }
+
             $this->assertJsonStringEqualsJsonString(
-                json_encode([-1, -1, null]),
+                json_encode($expectedValue),
                 json_encode($nextMove),
                 sprintf('The bot "%s" dit not return the expected result when the board is not full, but the human already had win the game.',
                     get_class($bot))

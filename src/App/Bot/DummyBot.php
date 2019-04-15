@@ -20,10 +20,11 @@ class DummyBot implements \MoveInterface
 
     /**
      * DummyBot constructor.
+     * @param FinalResultChecker $finalResultChecker
      */
-    public function __construct()
+    public function __construct(?FinalResultChecker $finalResultChecker = null)
     {
-        $this->finalResultChecker = new FinalResultChecker();
+        $this->finalResultChecker = $finalResultChecker ?? new FinalResultChecker();
     }
 
     /**
@@ -58,11 +59,11 @@ class DummyBot implements \MoveInterface
         }
 
         if (!Board::isValidBoard($boardState)) {
-            return [-1, -1, null];
+            return [-2, -2, null];
         }
 
         if ($this->finalResultChecker->getFinalResultFromBoardArray($boardState)) {
-            return [-1, -1, null];
+            return [-3, -3, null];
         }
 
         foreach ($boardState as $rowIndex => $row) {
@@ -73,6 +74,6 @@ class DummyBot implements \MoveInterface
             }
         }
 
-        return [-1, -1, $botUnit];
+        return [-4, -4, null];
     }
 }

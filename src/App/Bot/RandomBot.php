@@ -8,7 +8,7 @@ use TicTacToe\App\Board\Board;
 use TicTacToe\App\FinalResultChecker;
 
 /**
- * This not choose its next move randomly.
+ * This bot choose its next move randomly.
  */
 class RandomBot implements \MoveInterface
 {

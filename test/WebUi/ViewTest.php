@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TicTacToe\Test\WebUi;
 
 use PHPUnit\Framework\TestCase;
+use TicTacToe\WebUi\Exception\UnableToRenderView;
 use TicTacToe\WebUi\Exception\ViewFileNotFound;
 use TicTacToe\WebUi\View;
 
@@ -160,6 +161,25 @@ class ViewTest extends TestCase
         $this->assertNull($view->get('value'));
         $this->assertEquals('Undefined ' . __LINE__, $view->get('value', 'Undefined ' . __LINE__));
     }
+
+    public function testFailsToIncludeTheViewFile()
+    {
+        $view = new View('', $this->testViewsDir);
+        $view->failToIncludeDuringTest = true;
+
+        try {
+            $view->render($this->viewFile);
+            $this->fail(
+                sprintf(
+                    'It did not throw the exception "%s" when the "include" returns false.',
+                    UnableToRenderView::class
+                )
+            );
+        } catch (UnableToRenderView $e) {
+            $this->assertRegExp('/Unable to render view file ".+?". File include failed./', $e->getMessage());
+        }
+    }
+
 
     protected function setUp(): void
     {

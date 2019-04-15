@@ -37,6 +37,16 @@ interface BoardInterface
     public function get(int $row, int $col): ?string;
 
     /**
+     * Make a place empty.
+     * If the coordinate is invalid, nothing will happens.
+     *
+     * @param int $row
+     * @param int $col
+     * @return BoardInterface
+     */
+    public function clear(int $row, int $col): BoardInterface;
+
+    /**
      * Return the unit used by the bot player.
      *
      * @return string

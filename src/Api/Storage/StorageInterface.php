@@ -37,6 +37,7 @@ interface StorageInterface
      * Delete a value.
      * If it does not exists, no error will be throw.
      *
+     * @param string $id
      * @return StorageInterface
      */
     public function delete(string $id): StorageInterface;

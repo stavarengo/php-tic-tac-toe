@@ -20,7 +20,6 @@ class BasePathDetector
      * Usage Example
      * The following assume that the base URL of the page/application is "/mypage".
      *
-     *
      * ```php
      * // Prints: <base href="/mypage/" />
      * <base href="<?= $this->basePath() ?>" />
@@ -60,7 +59,7 @@ class BasePathDetector
             || preg_match($patternToMatchRelativePath, $publicDirectoryPath)
         ) {
             throw new PublicDirectoryPathCanNotBeRelative(
-                'You can not use relative path to the public directory. Please provide the absolute path to the public directory.'
+                'The public directory can not be relative path. Please provide the absolute path to the public directory.'
             );
         }
 

@@ -34,7 +34,6 @@ class Dispatcher implements DispatcherInterface
      * @throws Exception\PublicDirectoryPathCanNotBeRelative
      * @throws Exception\PublicDirectoryPathIsRequired
      * @throws Exception\UnableToRenderView
-     * @throws Exception\UnexpectedErrorWhileRenderingView
      * @throws Exception\ViewFileNotFound
      */
     public static function getError500Response(string $basePath, \Throwable $e): DispatcherResponse
@@ -55,7 +54,6 @@ class Dispatcher implements DispatcherInterface
      * @throws Exception\PublicDirectoryPathCanNotBeRelative
      * @throws Exception\PublicDirectoryPathIsRequired
      * @throws Exception\UnableToRenderView
-     * @throws Exception\UnexpectedErrorWhileRenderingView
      * @throws Exception\ViewFileNotFound
      */
     public static function getError404Response(string $basePath): DispatcherResponse
@@ -72,9 +70,6 @@ class Dispatcher implements DispatcherInterface
     /**
      * @param string $basePath
      * @return View
-     * @throws Exception\DocumentRootIsRequired
-     * @throws Exception\PublicDirectoryPathCanNotBeRelative
-     * @throws Exception\PublicDirectoryPathIsRequired
      */
     private static function getView(string $basePath): View
     {

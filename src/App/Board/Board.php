@@ -157,6 +157,13 @@ class Board implements BoardInterface
         return $this;
     }
 
+    public function clear(int $row, int $col): BoardInterface
+    {
+        $this->boardState[$row][$col] = '';
+
+        return $this;
+    }
+
     public function get(int $row, int $col): ?string
     {
         if (!isset($this->boardState[$row][$col])) {

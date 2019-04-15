@@ -38,12 +38,9 @@ class DispatcherAggregate
     }
 
     /**
-     * @param string $documentRoot
+     * @param string $basePath
      * @param string $requestUri
      * @return string
-     * @throws \TicTacToe\WebUi\Exception\DocumentRootIsRequired
-     * @throws \TicTacToe\WebUi\Exception\PublicDirectoryPathCanNotBeRelative
-     * @throws \TicTacToe\WebUi\Exception\PublicDirectoryPathIsRequired
      */
     public static function getRequestRoute(string $basePath, string $requestUri): string
     {

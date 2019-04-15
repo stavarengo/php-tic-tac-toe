@@ -248,7 +248,7 @@ class PutHandlerTest extends TestCase
         $responseBody = $response->getBody();
         $this->assertInstanceOf(Error::class, $responseBody);
 
-        $this->assertRegExp('/The bot choose an invalid move\..+/', $responseBody->getDetail());
+        $this->assertRegExp('/The bot chosen an invalid move\..+/', $responseBody->getDetail());
     }
 
     public function testTryToSetMoveButTheGameIsAlreadyDraw()
@@ -317,5 +317,99 @@ class PutHandlerTest extends TestCase
         }
 
         return $count;
+    }
+
+    public function testBotChooseAPlaceNotEmpty()
+    {
+        $board = new Board();
+        $storage = new ArrayStorage([
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
+        ]);
+
+        // bot tries to move to the a place not empty
+        $requestBody = (object)['row' => 0, 'column' => 0];
+
+        /** @var \MoveInterface $stubBot */
+        $stubBot = $this->createMock(DummyBot::class);
+        $stubBot->method('makeMove')
+            ->willReturn([$requestBody->row, $requestBody->column, $board->getBotUnit()]);
+        $response = (new PutHandler($stubBot))->handleIt($requestBody, $storage);
+        $this->assertEquals(400, $response->getStatusCode());
+        /** @var Error $responseBody */
+        $responseBody = $response->getBody();
+        $this->assertInstanceOf(Error::class, $responseBody);
+        $this->assertEquals(sprintf('The bot chosen an invalid move. The position "%s,%s" is already in use.', $requestBody->row, $requestBody->column), $responseBody->getDetail());
+        $this->assertEquals('', $board->get($requestBody->row, $requestBody->column));
+    }
+
+    public function testBotChooseAnInvalidColumn()
+    {
+        $board = new Board();
+        $storage = new ArrayStorage([
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
+        ]);
+
+        // bot tries to move to the a place not empty
+        $requestBody = (object)['row' => 0, 'column' => 0];
+
+        /** @var \MoveInterface $stubBot */
+        $stubBot = $this->createMock(DummyBot::class);
+        $stubBot->method('makeMove')
+            ->willReturn([0, -1, $board->getBotUnit()]);
+        $response = (new PutHandler($stubBot))->handleIt($requestBody, $storage);
+        $this->assertEquals(400, $response->getStatusCode());
+        /** @var Error $responseBody */
+        $responseBody = $response->getBody();
+        $this->assertInstanceOf(Error::class, $responseBody);
+        $this->assertRegExp(sprintf('/The bot chosen an invalid move. Invalid column "%s"\..+/', -1), $responseBody->getDetail());
+        $this->assertEquals('', $board->get($requestBody->row, $requestBody->column));
+    }
+
+    public function testBotChooseAnInvalidRow()
+    {
+        $board = new Board();
+        $storage = new ArrayStorage([
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
+        ]);
+
+        // bot tries to move to the a place not empty
+        $requestBody = (object)['row' => 0, 'column' => 0];
+
+        /** @var \MoveInterface $stubBot */
+        $stubBot = $this->createMock(DummyBot::class);
+        $stubBot->method('makeMove')
+            ->willReturn([-1, 0, $board->getBotUnit()]);
+        $response = (new PutHandler($stubBot))->handleIt($requestBody, $storage);
+        $this->assertEquals(400, $response->getStatusCode());
+        /** @var Error $responseBody */
+        $responseBody = $response->getBody();
+        $this->assertInstanceOf(Error::class, $responseBody);
+        $this->assertRegExp(sprintf('/The bot chosen an invalid move. Invalid row "%s"\..+/', -1), $responseBody->getDetail());
+        $this->assertEquals('', $board->get($requestBody->row, $requestBody->column));
+    }
+
+    public function testBotChooseAnInvalidUnit()
+    {
+        $board = new Board();
+        $storage = new ArrayStorage([
+            PostHandler::STORAGE_KEY_GAME_BOARD => $board,
+        ]);
+
+        // bot tries to move to the a place not empty
+        $requestBody = (object)['row' => 0, 'column' => 0];
+
+        $invalidUnit = 'Z';
+        $this->assertFalse(Board::isValidUnit($invalidUnit));
+        /** @var \MoveInterface $stubBot */
+        $stubBot = $this->createMock(DummyBot::class);
+        $stubBot->method('makeMove')
+            ->willReturn([1, 1, $invalidUnit]);
+        $response = (new PutHandler($stubBot))->handleIt($requestBody, $storage);
+        $this->assertEquals(400, $response->getStatusCode());
+        /** @var Error $responseBody */
+        $responseBody = $response->getBody();
+        $this->assertInstanceOf(Error::class, $responseBody);
+        $this->assertRegExp(sprintf('/The bot chosen an invalid move. Invalid unit "%s"\..+/', $invalidUnit), $responseBody->getDetail());
+        $this->assertEquals('', $board->get($requestBody->row, $requestBody->column));
     }
 }

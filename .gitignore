@@ -2,3 +2,4 @@
 vendor/
 composer.phar
 .phpunit.result.cache
+test-coverage/

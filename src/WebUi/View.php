@@ -6,7 +6,6 @@ namespace TicTacToe\WebUi;
 
 
 use TicTacToe\WebUi\Exception\UnableToRenderView;
-use TicTacToe\WebUi\Exception\UnexpectedErrorWhileRenderingView;
 use TicTacToe\WebUi\Exception\ViewFileNotFound;
 
 class View
@@ -24,6 +23,8 @@ class View
      * @var string
      */
     private $viewsDirectory;
+
+    public $failToIncludeDuringTest = false;
 
     /**
      * View constructor.
@@ -57,7 +58,11 @@ class View
      */
     public function basePath(?string $path = null): string
     {
-        return ($this->basePath == '/' ?  '' : $this->basePath . '/') . $path;
+        if (!$path) {
+            return $this->basePath;
+        }
+
+        return rtrim($this->basePath, '/') . '/' . ltrim($path, '/');
     }
 
     /**
@@ -94,7 +99,6 @@ class View
      *
      * @throws UnableToRenderView
      * @throws ViewFileNotFound
-     * @throws UnexpectedErrorWhileRenderingView
      */
     public function render(
         string $viewFileName,
@@ -119,8 +123,6 @@ class View
             throw $e;
         } catch (ViewFileNotFound $e) {
             throw $e;
-        } catch (\Throwable $e) {
-            throw new UnexpectedErrorWhileRenderingView($e->getMessage(), $e->getCode(), $e);
         } finally {
             $this->viewVariables = [];
         }
@@ -131,7 +133,6 @@ class View
      * @return string
      * @throws UnableToRenderView
      * @throws ViewFileNotFound
-     * @throws \Throwable
      */
     private function getViewContents(string $absoluteViewFilePath, bool $isTemplate): string
     {
@@ -145,14 +146,12 @@ class View
             );
         }
 
-        try {
-            ob_start();
+        ob_start();
+        $includeReturn = false;
+        if (!$this->failToIncludeDuringTest) {
             $includeReturn = include $absoluteViewFilePath;
-            $content = ob_get_clean();
-        } catch (\Throwable $ex) {
-            ob_end_clean();
-            throw $ex;
         }
+        $content = ob_get_clean();
 
         if ($includeReturn === false && empty($content)) {
             throw new UnableToRenderView(sprintf(

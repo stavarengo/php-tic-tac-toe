@@ -10,6 +10,9 @@
         <testsuite name="TicTacToe Api Module">
             <directory>./test/Api</directory>
         </testsuite>
+        <testsuite name="TicTacToe WebUi Module">
+            <directory>./test/WebUi</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
