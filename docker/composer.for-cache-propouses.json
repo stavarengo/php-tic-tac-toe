@@ -1,0 +1,33 @@
+{
+    "name": "stavarengo/php-tic-tac-toe",
+    "description": "Single player Tic Tac Toe game with a bot as the opponent. The boat uses Minimax algorithm to decides its moves.",
+    "type": "project",
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "classmap": [
+            "src/MoveInterface.php"
+        ],
+        "psr-4": {
+            "TicTacToe\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TicTacToe\\Test\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.1"
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:4000 -t public/",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-html ./test-coverage"
+    }
+}
