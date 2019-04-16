@@ -71,10 +71,21 @@ class MinimaxBot implements \MoveInterface
                     // Make the move
                     $board[$rowIndex][$colIndex] = $botUnit;
 
-                    $nextMoveScore = $this->minimax($board, 0, false, $botUnit, $humanUnit);
+                    $nextMoveScore = $this->minimax(
+                        $board,
+                        0,
+                        false,
+                        $botUnit,
+                        $humanUnit,
+                        self::MIN_SCORE,
+                        self::MAX_SCORE
+                    );
                     if ($bestScore === null || $nextMoveScore > $bestScore) {
                         $bestScore = $nextMoveScore;
                         $bestMove = [$rowIndex, $colIndex];
+                        if ($bestScore == self::MAX_SCORE) {
+                            break 2;
+                        }
                     }
 
                     // Undo the move
@@ -91,15 +102,17 @@ class MinimaxBot implements \MoveInterface
         int $depth,
         bool $isMaximizingPlayer,
         string $maximizingPlayer,
-        string $minimizingPlayer
+        string $minimizingPlayer,
+        int $alpha,
+        int $beta
     ): int {
         $finalResult = $this->finalResultChecker->getFinalResultFromBoardArray($board);
         if ($finalResult == $maximizingPlayer) {
-            $finalScore = self::MAX_SCORE;
+            $finalScore = self::MAX_SCORE - $depth;
             return $finalScore;
         }
         if ($finalResult == $minimizingPlayer) {
-            $finalScore = self::MIN_SCORE;
+            $finalScore = self::MIN_SCORE + $depth;
             return $finalScore;
         }
         if ($finalResult == FinalResultChecker::DRAW) {
@@ -125,7 +138,9 @@ class MinimaxBot implements \MoveInterface
                     $depth + 1,
                     !$isMaximizingPlayer,
                     $maximizingPlayer,
-                    $minimizingPlayer
+                    $minimizingPlayer,
+                    $alpha,
+                    $beta
                 );
 
                 // Undo the move
@@ -133,8 +148,16 @@ class MinimaxBot implements \MoveInterface
 
                 if ($isMaximizingPlayer) {
                     $bestScore = max($bestScore, $nextMoveScore);
+                    $alpha = max($alpha, $bestScore);
+                    if ($beta <= $alpha) {
+                        break 2;
+                    }
                 } else {
                     $bestScore = min($bestScore, $nextMoveScore);
+                    $beta = min($beta, $bestScore);
+                    if ($beta <= $alpha) {
+                        break 2;
+                    }
                 }
             }
         }
