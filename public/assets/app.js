@@ -52,6 +52,8 @@
             }
             this.nodes.boardSection.classList.add('board-disabled');
 
+
+            gtag('event', method + ' ' + url);
             var request = new XMLHttpRequest();
 
             request.open(method, w.__BASE_PATH__.replace(/\/$/, '') + url, true);
