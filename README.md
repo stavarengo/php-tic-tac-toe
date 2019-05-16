@@ -3,31 +3,19 @@
 ## About the project
 
 - To see it in action, go to [http://php-tic-tac-toe.stavarengo.com](http://php-tic-tac-toe.stavarengo.com/).
-- The `TicTacToe\App\Bot\MoveInterface`:
-    - It has not been changed in any way. I did not even add a `namespace` to it.
-    - Its implementation can be found in the file `src/App/Bot/MinimaxBot.php`. I used the [Minimax Algorithm]
-      for this bot to decide its moves.
-    - All tests for related to the `TicTacToe\App\Bot\MoveInterface` can be found in the directory `test/App/Bot`.
-- The application is 100% covered with tests using [PHPUnit]. To run the tests use the following code `$ composer run test`.
-    - The test coverage report is ready at `test-coverage/index.html`, but if you want to generate a fresh report, run
-      this code `$ composer run --timeout 0 test-coverage` and then open `test-coverage/index.html` (I warn you that
-      the coverage report takes several minutes to be done, for all the possibilities the bot has to play in
-      order to be sure it will never fail).
+- The bot uses the [Minimax Algorithm] to decide its moves. You can see it on [\TicTacToe\App\Bot\MinimaxBot].
+- The application is 100% covered with tests using [PHPUnit].
 - This is a modular application, compound of three modules: 
   1. `App`: Where you can find behaviors not related to an API nor to a Web Interface, as
             the game board and the bots.
-  1. `Api`: This is where reside the RESTful API. This module only has behaviors related to API requests. There you will
+  1. `Api`: This is where reside the API. This module only has behaviors related to API requests. There you will
             find the Requests Handlers (AKA controllers), entities used in the API responses, etc.
-  1. `WebUi`: The main responsibility of WebUi is to render views, but not only that. More generally, it is responsible to
+  1. `WebUi`: The main responsibility of WebUi is to render views, but not only that. More generally, it is responsible
               for respond all requests that the API does not know how to handle.
 - No dependency on third-party code other than [PHPUnit], [Bootstrap] (CSS library) and [FontAwesome] (icon library). 
-  Everything has been written by me, especially for this homework.
-- I received another test as an option (refactoring test), and although I chose this project, it also contemplates some
-  of the requirements from the other test, such as: OOP structure; use of principles, like S.O.L.I.D. and G.R.A.S.P; 
-  use of TDD.
+  Everything has been written from scratch. Why? Just because.
+- This is a object-oriented PHP, thus it use principles like S.O.L.I.D., G.R.A.S.P., etc.
 
-**This is the end of the instruction and notes for who is evaluating the test**, but the rest of this README.md is also
-interesting. I invite you to take a quick look, if you have the time.
 
 ## Getting Started
 
@@ -222,3 +210,4 @@ $ curl -X DELETE 'http://127.0.0.1:4000/api/board'
 [`DELETE /api/board`]: #delete-board
 [The Game State]: #the-game-state
 [The Error Response Layout]: #the-error-response-layout
+[\TicTacToe\App\Bot\MinimaxBot]: https://github.com/stavarengo/php-tic-tac-toe/blob/master/src/App/Bot/MinimaxBot.php
