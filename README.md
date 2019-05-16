@@ -2,7 +2,8 @@
 
 ## About the project
 
-- To see it in action, go to [http://php-tic-tac-toe.stavarengo.com](http://php-tic-tac-toe.stavarengo.com/).
+- To see it in action, go to [http://php-tic-tac-toe.stavarengo.com](http://php-tic-tac-toe.stavarengo.com/), or you
+  can run it locally with Docker, by running `sudo docker run stavarengo/php-tic-tac-toe` and then .
 - The bot uses the [Minimax Algorithm] to decide its moves. You can see it on [\TicTacToe\App\Bot\MinimaxBot].
 - The application is 100% covered with tests using [PHPUnit].
 - This is a modular application, compound of three modules: 

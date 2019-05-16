@@ -1,0 +1,7 @@
+vendor/
+.idea/
+.git/
+composer.phar
+Dockerfile
+.phpunit.result.cache
+test-coverage/
