@@ -10,7 +10,7 @@ use TicTacToe\App\FinalResultChecker;
 /**
  * This bot choose its next move randomly.
  */
-class RandomBot implements \MoveInterface
+class RandomBot implements \TicTacToe\App\Bot\BotInterface
 {
     /**
      * @var FinalResultChecker

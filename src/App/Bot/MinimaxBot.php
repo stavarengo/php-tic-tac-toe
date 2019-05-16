@@ -14,7 +14,7 @@ use TicTacToe\App\FinalResultChecker;
  * @see https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-1-introduction/
  * @see https://en.wikipedia.org/wiki/Minimax
  */
-class MinimaxBot implements \MoveInterface
+class MinimaxBot implements \TicTacToe\App\Bot\BotInterface
 {
     private const MAX_SCORE = PHP_INT_MAX;
 

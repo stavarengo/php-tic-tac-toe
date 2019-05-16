@@ -19,7 +19,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 COPY docker/composer.for-cache-propouses.json "$STA_DEST_DIR_SITE/composer.json"
 COPY docker/composer.for-cache-propouses.lock "$STA_DEST_DIR_SITE/composer.lock"
-COPY src/MoveInterface.php "$STA_DEST_DIR_SITE/src/"
+COPY src/App/Bot/BotInterface.php "$STA_DEST_DIR_SITE/src/"
 RUN cd "$STA_DEST_DIR_SITE" && \
     php composer.phar install --no-dev --no-progress --optimize-autoloader
 

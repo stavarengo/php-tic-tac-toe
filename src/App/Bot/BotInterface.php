@@ -1,6 +1,8 @@
 <?php
 
-interface MoveInterface
+namespace TicTacToe\App\Bot;
+
+interface BotInterface
 {
     /**
      * Makes a move using the actual game board state, against the player.

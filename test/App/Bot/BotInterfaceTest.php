@@ -11,17 +11,17 @@ use TicTacToe\App\Bot\MinimaxBot;
 use TicTacToe\App\Bot\RandomBot;
 use TicTacToe\App\FinalResultChecker;
 
-class MoveInterfaceTest extends TestCase
+class BotInterfaceTest extends TestCase
 {
     /**
-     * @var \MoveInterface[]
+     * @var \TicTacToe\App\Bot\BotInterface[]
      */
     protected $allBotsImplementation;
 
     public function testAllPossibleMovies()
     {
 
-        $recursiveFunction = function ($whoPlays, $humanUnit, $botUnit, array $board, \MoveInterface $bot)
+        $recursiveFunction = function ($whoPlays, $humanUnit, $botUnit, array $board, \TicTacToe\App\Bot\BotInterface $bot)
         use (&$recursiveFunction) {
             $whoPlaysNext = $whoPlays == $humanUnit ? $botUnit : $humanUnit;
 

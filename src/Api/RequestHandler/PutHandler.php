@@ -20,7 +20,7 @@ use TicTacToe\App\FinalResultChecker;
 class PutHandler implements RequestHandlerInterface
 {
     /**
-     * @var \MoveInterface
+     * @var \TicTacToe\App\Bot\BotInterface
      */
     protected $bot;
     /**
@@ -28,7 +28,7 @@ class PutHandler implements RequestHandlerInterface
      */
     private $finalResultChecker;
 
-    public function __construct(?\MoveInterface $bot = null)
+    public function __construct(?\TicTacToe\App\Bot\BotInterface $bot = null)
     {
         $this->bot = $bot ?? new MinimaxBot();
         $this->finalResultChecker = new FinalResultChecker();

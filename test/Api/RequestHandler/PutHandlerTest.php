@@ -234,7 +234,7 @@ class PutHandlerTest extends TestCase
             PostHandler::STORAGE_KEY_GAME_BOARD => $board,
         ]);
 
-        /** @var \MoveInterface $stubBot */
+        /** @var \TicTacToe\App\Bot\BotInterface $stubBot */
         $stubBot = $this->createMock(DummyBot::class);
         $stubBot->method('makeMove')
             ->willReturn([-1, -1, $board->getBotUnit()]);
@@ -329,7 +329,7 @@ class PutHandlerTest extends TestCase
         // bot tries to move to the a place not empty
         $requestBody = (object)['row' => 0, 'column' => 0];
 
-        /** @var \MoveInterface $stubBot */
+        /** @var \TicTacToe\App\Bot\BotInterface $stubBot */
         $stubBot = $this->createMock(DummyBot::class);
         $stubBot->method('makeMove')
             ->willReturn([$requestBody->row, $requestBody->column, $board->getBotUnit()]);
@@ -352,7 +352,7 @@ class PutHandlerTest extends TestCase
         // bot tries to move to the a place not empty
         $requestBody = (object)['row' => 0, 'column' => 0];
 
-        /** @var \MoveInterface $stubBot */
+        /** @var \TicTacToe\App\Bot\BotInterface $stubBot */
         $stubBot = $this->createMock(DummyBot::class);
         $stubBot->method('makeMove')
             ->willReturn([0, -1, $board->getBotUnit()]);
@@ -375,7 +375,7 @@ class PutHandlerTest extends TestCase
         // bot tries to move to the a place not empty
         $requestBody = (object)['row' => 0, 'column' => 0];
 
-        /** @var \MoveInterface $stubBot */
+        /** @var \TicTacToe\App\Bot\BotInterface $stubBot */
         $stubBot = $this->createMock(DummyBot::class);
         $stubBot->method('makeMove')
             ->willReturn([-1, 0, $board->getBotUnit()]);
@@ -400,7 +400,7 @@ class PutHandlerTest extends TestCase
 
         $invalidUnit = 'Z';
         $this->assertFalse(Board::isValidUnit($invalidUnit));
-        /** @var \MoveInterface $stubBot */
+        /** @var \TicTacToe\App\Bot\BotInterface $stubBot */
         $stubBot = $this->createMock(DummyBot::class);
         $stubBot->method('makeMove')
             ->willReturn([1, 1, $invalidUnit]);

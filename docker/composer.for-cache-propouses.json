@@ -6,9 +6,6 @@
         "sort-packages": true
     },
     "autoload": {
-        "classmap": [
-            "src/MoveInterface.php"
-        ],
         "psr-4": {
             "TicTacToe\\": "src/"
         }

@@ -1,18 +1,13 @@
 # php-tic-tac-toe
 
-## Instructions and notes for anyone evaluating the test
+## About the project
 
-- To see it in action, run the following commands and then open [http://127.0.0.1:4000](http://127.0.0.1:4000) in your 
-  browser.
-```bash
-$ composer install
-$ composer run --timeout=0 serve
-```
-- The `MoveInterface`:
+- To see it in action, go to [http://php-tic-tac-toe.stavarengo.com](http://php-tic-tac-toe.stavarengo.com/).
+- The `TicTacToe\App\Bot\MoveInterface`:
     - It has not been changed in any way. I did not even add a `namespace` to it.
     - Its implementation can be found in the file `src/App/Bot/MinimaxBot.php`. I used the [Minimax Algorithm]
       for this bot to decide its moves.
-    - All tests for related to the `MoveInterface` can be found in the directory `test/App/Bot`.
+    - All tests for related to the `TicTacToe\App\Bot\MoveInterface` can be found in the directory `test/App/Bot`.
 - The application is 100% covered with tests using [PHPUnit]. To run the tests use the following code `$ composer run test`.
     - The test coverage report is ready at `test-coverage/index.html`, but if you want to generate a fresh report, run
       this code `$ composer run --timeout 0 test-coverage` and then open `test-coverage/index.html` (I warn you that

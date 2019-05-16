@@ -13,7 +13,7 @@ class MinimaxBotTest extends TestCase
 {
     public function testMinimaxBotCanNeverLoose()
     {
-        $recursiveFunction = function ($whoPlays, $humanUnit, $botUnit, array $board, \MoveInterface $bot)
+        $recursiveFunction = function ($whoPlays, $humanUnit, $botUnit, array $board, \TicTacToe\App\Bot\BotInterface $bot)
         use (&$recursiveFunction) {
             $whoPlaysNext = $whoPlays == $humanUnit ? $botUnit : $humanUnit;
 
